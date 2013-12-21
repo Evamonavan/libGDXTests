@@ -14,8 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.johnathongoss.libgdxtests.screens.Examples;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.utils.MyTimer;
 
@@ -52,8 +56,20 @@ public class PopCorns extends BlankTestScreen{
 		timer.setRepeating(true);
 
 		numBalls = 50;
-		testName = "Pop Corn Example |";	
-		addBackButton();
+		testName = "Pop Corn Example |";
+		
+		backButton = new TextButton("Examples", skin);
+		backButton.setHeight(BUTTON_HEIGHT);
+		backButton.setWidth(BUTTON_WIDTH);
+		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Examples(game));
+			}
+		});	
+
+		stageui.addActor(backButton);	
 
 		gravity = -0.1f;
 		hardness = 0.6f;

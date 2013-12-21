@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdx.examples.PopCorns.Corn;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.screens.Examples;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
@@ -108,7 +110,18 @@ public class FishTank extends BlankTestScreen {
 		viscosity = 0.99f;
 
 		addCameraControl(width, 0, height, 0);
-		addBackButton();
+		backButton = new TextButton("Examples", skin);
+		backButton.setHeight(BUTTON_HEIGHT);
+		backButton.setWidth(BUTTON_WIDTH);
+		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Examples(game));
+			}
+		});	
+
+		stageui.addActor(backButton);	
 
 		fishes = new Array<Fish>();
 		for (int i = 0; i < 10; i++) {

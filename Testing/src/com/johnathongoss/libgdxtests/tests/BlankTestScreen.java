@@ -20,7 +20,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 	protected Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	protected float BUTTON_WIDTH = Gdx.app.getGraphics().getWidth()/7;
 	protected float BUTTON_HEIGHT = Gdx.app.getGraphics().getHeight()/8;
-	private TextButton backButton;
+	protected TextButton backButton;
 	protected boolean showBackButton = false;
 	protected Array<TextButton> buttons = new Array<TextButton>();
 	protected String testName = "";
@@ -31,14 +31,15 @@ public abstract class BlankTestScreen extends BlankScreen {
 		Text = new Array<String>();
 	}	
 
-	@Override
 	public abstract void render(float delta);
-
+	
+	public abstract void show();
+	
 	protected void renderTestName(SpriteBatch batch){
 		Assets.font24.setColor(1, 1, 1, 0.8f);
-		Assets.font24.drawMultiLine(batchui, "FPS: " + Gdx.app.getGraphics().getFramesPerSecond(), 0, 24, width, HAlignment.LEFT);
+		Assets.font24.drawMultiLine(batch, "FPS: " + Gdx.app.getGraphics().getFramesPerSecond(), 0, 24, width, HAlignment.LEFT);
 		Assets.font24.setColor(1, 1, 1, 1);
-		Assets.font24.drawMultiLine(batchui, testName , 0, 24, width, HAlignment.RIGHT);		
+		Assets.font24.drawMultiLine(batch, testName , 0, 24, width, HAlignment.RIGHT);		
 	}
 	
 	protected abstract void updateText();
@@ -65,8 +66,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 
 	protected abstract void renderText();
 
-	@Override
-	public abstract void show();
+	
 
 	@Override
 	public void resize(int width, int height){

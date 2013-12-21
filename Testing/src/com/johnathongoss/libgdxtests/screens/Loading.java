@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.ParticleEffectsCache;
 
 
 public class Loading implements Screen {
@@ -29,6 +30,7 @@ public class Loading implements Screen {
 
 		Assets.Load();
 		ImageCache.load();
+		ParticleEffectsCache.Load();
 	}
 	
 	@Override
