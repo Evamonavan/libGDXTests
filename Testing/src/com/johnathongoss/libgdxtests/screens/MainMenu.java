@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Box2D;
+import com.johnathongoss.libgdxtests.tests.Box2DTest;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
 import com.johnathongoss.libgdxtests.tests.Particles;
@@ -21,7 +22,7 @@ public class MainMenu extends BlankTestScreen {
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.4 |");
+		Text.add("0.4.1 |");
 		Text.add("");
 		Text.add("johnathongoss.com |");
 	}
@@ -67,6 +68,23 @@ public class MainMenu extends BlankTestScreen {
 		});		
 		
 		buttons.add(tempButton);
+		
+		/*
+		 * Box 2D Test2
+		 */
+		
+		tempButton = new TextButton("Box2D", skin);
+		tempButton.setHeight(BUTTON_HEIGHT);
+		tempButton.setWidth(BUTTON_WIDTH);
+		
+		tempButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Box2DTest(game));
+			}
+		});		
+		
+		//buttons.add(tempButton);
 		
 		/*
 		 * Camera 2D Test

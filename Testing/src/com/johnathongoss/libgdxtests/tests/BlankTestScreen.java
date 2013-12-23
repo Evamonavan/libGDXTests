@@ -14,7 +14,6 @@ import com.johnathongoss.libgdxtests.screens.BlankScreen;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public abstract class BlankTestScreen extends BlankScreen {
-
 	
 	protected Array<String> Text;	
 	protected Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -52,6 +51,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 			backButton = new TextButton("Main Menu", skin);
 			backButton.setHeight(BUTTON_HEIGHT);
 			backButton.setWidth(BUTTON_WIDTH);
+			backButton.setPosition(0, height - BUTTON_HEIGHT);
 			backButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {

@@ -37,7 +37,6 @@ public class PopCorns extends BlankTestScreen{
 	private float conservedEnergy;
 	private Array<Corn> corns;
 
-
 	@Override
 	public void show(){
 		shapeRenderer = new ShapeRenderer();
@@ -95,7 +94,6 @@ public class PopCorns extends BlankTestScreen{
 		if (!corns.get(tempInt).popped){
 			corns.get(tempInt).pop();
 		}
-
 	}
 
 	@Override

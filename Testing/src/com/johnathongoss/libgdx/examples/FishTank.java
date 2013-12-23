@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdx.examples.PopCorns.Corn;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.ParticleEffectsCache;
 import com.johnathongoss.libgdxtests.screens.Examples;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
@@ -43,7 +45,8 @@ public class FishTank extends BlankTestScreen {
 	public double hardness;
 	public float viscosity = 0.992f;
 	Sprite tank, tank_shine;
-	
+	private  Array<PooledEffect> Effects;
+	private Fish followedFish;
 	public FishTank(Game game) {
 		super(game);		
 		tank = new Sprite(ImageCache.getTexture("tank"));
@@ -52,26 +55,39 @@ public class FishTank extends BlankTestScreen {
 		tank.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
 
 		tank_shine = new Sprite(ImageCache.getTexture("tank_shine"));
-		tank_shine.setPosition(0, 0);
+		tank_shine.setPosition(-20,-20);
 		tank_shine.setOrigin(0, 0);
 		tank_shine.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
 
-		
 		testName = "Fish Tank Example |";
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+		createBubbles();
+
+		if (following)
+			followFish();
+
 		batch.begin();
-		tank.draw(batch);
+		tank.draw(batch);		
 		batch.end();
+		
 		stage.act(delta);
 		stage.draw();
 
 		batch.begin();
+		for (PooledEffect effect : Effects){
+			//effect.getEmitters().first().setPosition(effect.getEmitters().first().getX() + 2, effect.getEmitters().first().getY() + 2);
+			effect.draw(batch, delta);
+			if (effect.isComplete()){
+				Effects.removeValue(effect, true);
+				effect.reset();
+				effect.free();					
+			}
+		}
 		tank_shine.draw(batch);
 		batch.end();
 		stageui.act(delta);
@@ -81,9 +97,18 @@ public class FishTank extends BlankTestScreen {
 		renderTestName(batchui);
 		batchui.end();
 
-		controller.update();
+		//controller.update();
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
+
+	}
+
+	private void followFish() {
+
+		cam.zoom = 0.5f;
+		cam.position.x = followedFish.getX();
+		cam.position.y = followedFish.getY();
+
 
 	}
 
@@ -101,6 +126,8 @@ public class FishTank extends BlankTestScreen {
 
 	@Override
 	public void show() {
+		addInput();
+		Effects = new Array<PooledEffect>();
 		shapeRenderer = new ShapeRenderer();
 		cam.zoom = 1.4f;
 		gravity = 0;
@@ -109,7 +136,7 @@ public class FishTank extends BlankTestScreen {
 		conservedEnergy = 0.5f;
 		viscosity = 0.99f;
 
-		addCameraControl(width, 0, height, 0);
+		//addCameraControl(width, 0, height, 0);
 		backButton = new TextButton("Examples", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
@@ -132,20 +159,24 @@ public class FishTank extends BlankTestScreen {
 		}
 	}
 
+	public void createBubbles() {
+
+		if (MathUtils.random(0, 100) < 3){
+			Effects.add(ParticleEffectsCache.getParticleEffect(ParticleEffectsCache.BUBBLES));
+			Effects.get(Effects.size - 1).setPosition(MathUtils.random(50, width - 50), 0);
+		}
+		//Gdx.app.log("Particles", "Particle Created");		
+	}
+	private boolean following = false;
+	private void resetCamera(){
+		cam.position.x = width/2;
+		cam.position.y = height/2;
+		cam.zoom = 1.4f;		
+	}
 	public class Fish extends Actor {
-		public boolean popped;
 
 		MyTimer timer;
-
-		public void pop(){
-			popped = true;
-
-			setDiameter(MathUtils.random(width/18, width/12));
-			setColor(1f, 0.8f, 0, 1);
-			setVelocity(MathUtils.random(-9f, 9f), MathUtils.random(-9f, 9f));
-
-		}
-
+		Fish thisFish;
 		public float diameter;
 		float vx = 0;
 		float vy = 0;
@@ -154,10 +185,12 @@ public class FishTank extends BlankTestScreen {
 		Array<Fish> others;
 		TextureRegion texture = ImageCache.getTexture("fish");
 		public Fish(float xin, float yin, float din, int idin, Array<Fish> balls) {
+			thisFish = this;
 			timer = new MyTimer(MathUtils.random(1f, 8f)) {				
+
 				@Override
 				protected void perform() {
-					changeDirection(1f);
+					changeDirection(1f);				
 
 					timer.setCap(MathUtils.random(3.5f, 9f));
 				}
@@ -183,17 +216,27 @@ public class FishTank extends BlankTestScreen {
 				}
 
 				public void tap(InputEvent event, float x, float y, int count, int button){
-					changeDirection(2f);
+					if (!following){
+						followedFish = thisFish;
+						following = true;
+					}
+					else if (following && thisFish != followedFish){
+						
+						followedFish = thisFish;
+						following = true;
+						
+					}
+
+					else if (following && thisFish == followedFish){
+						resetCamera();
+						following = false;
+					}
 				}
 			});
 
 			setTouchable(Touchable.enabled);
-
-
 		} 
 		private void changeDirection(float power) {
-
-			//setVelocity(MathUtils.random(-vx *MathUtils.random(-1.3f, 1.3f), vx *MathUtils.random(-1.3f, 1.3f)), MathUtils.random(-vy *MathUtils.random(-1.3f, 1.3f), vy * MathUtils.random(-1.3f, 1.3f)));
 
 			vx += MathUtils.random(-2f*power, 2f*power);
 			vy += MathUtils.random(-0.6f*power, 0.6f*power);
@@ -255,15 +298,15 @@ public class FishTank extends BlankTestScreen {
 		void move(float delta) {
 			vy *= viscosity ;
 			vx *= viscosity;
-			
+
 			if (vx > 2f)
 				vx = 2f;
 			if (vy > 2f)
 				vy = 2f;
-			
+
 			addX(vx);
 			addY(vy);
-			
+
 			if (getXOffset() + diameter/2> width) {
 				setX(width - diameter);
 				vx *= friction; 
@@ -293,7 +336,7 @@ public class FishTank extends BlankTestScreen {
 			if (getActions().size <= 0){
 
 				float toScaleX;
-				
+
 				if (getScaleX() > 0)
 					toScaleX = -1f;
 				else
@@ -337,12 +380,12 @@ public class FishTank extends BlankTestScreen {
 			timer.update(delta);
 			collide(delta);
 			move(delta);
-			
+
 			if (vx > 0.15 && getScaleX() > 0)
 				Flip();
 			else if (vx < -0.15 && getScaleX() < 0)
 				Flip();
-			
+
 			for (int i = 0; i < getActions().size; i++) {
 				Action action = getActions().get(i);
 				if (action.act(delta) && i < getActions().size) {

@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ParticleEffectsCache;
 import com.johnathongoss.libgdxtests.screens.Examples;
-import com.johnathongoss.libgdxtests.utils.ParticleEffectActor;
 
 public class Particles extends BlankTestScreen {
 
@@ -77,7 +76,7 @@ public class Particles extends BlankTestScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				index ++;
-				if (index > 2)
+				if (index > 3)
 					index = 0;
 				switchButton.setText("Particle " + index);
 			}
