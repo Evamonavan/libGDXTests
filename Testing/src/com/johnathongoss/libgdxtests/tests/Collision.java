@@ -114,87 +114,87 @@ public class Collision extends BlankTestScreen {
 		 * Decrease Gravity
 		 */		
 
-		tempButton = new TextButton("[-] Gravity", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[-] Gravity", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseGravityLevel(-1);				
 			}
 
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 
 		/*
 		 * Decrease Hardness
 		 */		
 
-		tempButton = new TextButton("[-] Hardness", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[-] Hardness", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseHardnessLevel(-1);
 			}
 		});		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		/*
 		 * Decrease Conserved Energy
 		 */		
 
-		tempButton = new TextButton("[-] Con. Energy", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[-] Con. Energy", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseCEnergyLevel(-1);
 			}
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 
 		/*
 		 * Increase Gravity
 		 */
 
-		tempButton = new TextButton("[+] Gravity", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[+] Gravity", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseGravityLevel(1);
 			}
 		});		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		/*
 		 * Increase Hardness
 		 */		
 
-		tempButton = new TextButton("[+] Hardness", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[+] Hardness", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseHardnessLevel(1);
 			}
 		});		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		/*
 		 * Increase Conserve Energy
 		 */		
 
-		tempButton = new TextButton("[+] Con. Energy", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("[+] Con. Energy", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				increaseCEnergyLevel(1);
 			}
 		});		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		/*
 		 * New Ball
 		 */		
 
-		tempButton = new TextButton("Add Ball", skin);
-		tempButton.addListener(new ClickListener() {
+		debugButton = new TextButton("Add Ball", skin);
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 
@@ -203,7 +203,7 @@ public class Collision extends BlankTestScreen {
 			}
 
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 
 		for (TextButton button : buttons){			
 			stageui.addActor(button);		

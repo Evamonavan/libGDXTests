@@ -22,7 +22,7 @@ public class MainMenu extends BlankTestScreen {
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.4.1 |");
+		Text.add("0.4.2 |");
 		Text.add("");
 		Text.add("johnathongoss.com |");
 	}
@@ -56,28 +56,28 @@ public class MainMenu extends BlankTestScreen {
 		 * Box 2D Test
 		 */
 		
-		tempButton = new TextButton("Box2D", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Box2D", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Box2D(game));
 			}
 		});		
 		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 		
 		/*
 		 * Box 2D Test2
 		 */
 		
-		tempButton = new TextButton("Box2D", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Box2D", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Box2DTest(game));
@@ -90,18 +90,18 @@ public class MainMenu extends BlankTestScreen {
 		 * Camera 2D Test
 		 */
 		
-		tempButton = new TextButton("Camera 2D", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Camera 2D", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Camera2D(game));
 			}
 		});		
 		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 		
 		
 		
@@ -109,52 +109,52 @@ public class MainMenu extends BlankTestScreen {
 		 * Collision Test
 		 */
 		
-		tempButton = new TextButton("Collision", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Collision", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Collision(game));
 			}
 		});		
 		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 		
 		/*
 		 * Timer Test
 		 */
 		
-		tempButton = new TextButton("Timers", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Timers", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Timers(game));
 			}
 		});		
 		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 		
 		/*
 		 * Particles
 		 */
 		
-		tempButton = new TextButton("Particles", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Particles", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 		
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Particles(game));
 			}
 		});		
 		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 		
 		for (TextButton button : buttons){			
 			stage.addActor(button);			

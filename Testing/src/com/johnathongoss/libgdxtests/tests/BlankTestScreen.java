@@ -42,7 +42,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 	}
 	
 	protected abstract void updateText();
-	protected TextButton tempButton;
+	protected TextButton debugButton;
 	protected void addBackButton(){
 
 		showBackButton = true;

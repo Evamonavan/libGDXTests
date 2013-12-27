@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdx.examples.FishTank;
+import com.johnathongoss.libgdx.examples.FishTankBox2D;
 import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
@@ -60,35 +61,35 @@ public class Examples extends BlankTestScreen {
 		 * Pop Corn
 		 */
 
-		tempButton = new TextButton("Pop Corn", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Pop Corn", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new PopCorns(game));
 			}
 		});		
 
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		/*
 		 * Fish Tank
 		 */
 
-		tempButton = new TextButton("Fish Tank", skin);
-		tempButton.setHeight(BUTTON_HEIGHT);
-		tempButton.setWidth(BUTTON_WIDTH);
+		debugButton = new TextButton("Fish Tank", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
 
-		tempButton.addListener(new ClickListener() {
+		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new FishTank(game));
 			}
 		});		
 
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 
 		for (TextButton button : buttons){			
 			stage.addActor(button);			

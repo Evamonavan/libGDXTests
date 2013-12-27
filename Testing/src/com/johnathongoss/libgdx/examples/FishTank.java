@@ -2,42 +2,43 @@ package com.johnathongoss.libgdx.examples;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdx.examples.PopCorns.Corn;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.ParticleEffectsCache;
 import com.johnathongoss.libgdxtests.screens.Examples;
-import com.johnathongoss.libgdxtests.screens.MainMenu;
-import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
-import com.johnathongoss.libgdxtests.tests.Camera2D;
-import com.johnathongoss.libgdxtests.tests.Collision;
-import com.johnathongoss.libgdxtests.tests.Collision.Ball;
 import com.johnathongoss.libgdxtests.utils.MyTimer;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+public class FishTank implements Screen {
 
-public class FishTank extends BlankTestScreen {
-
-	public ShapeRenderer shapeRenderer;
+	private Game game;
+	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+	private MyTimer bubbleTimer;
+	
+	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
+	private OrthographicCamera cam;
+	private Stage stage, stageui;
+	private SpriteBatch batch, batchui;
+	
 	public Array<Fish> fishes;
 	public float gravity;
 	public float friction;
@@ -47,16 +48,27 @@ public class FishTank extends BlankTestScreen {
 	Sprite tank, tank_shine;
 	private  Array<PooledEffect> Effects;
 	private Fish followedFish;
+
+	private String testName;
+
+	private TextButton backButton;
 	public FishTank(Game game) {
-		super(game);		
+		this.game = game;
+		
+		width = Gdx.app.getGraphics().getWidth();
+		height = Gdx.app.getGraphics().getHeight();
+		
+		BUTTON_WIDTH = width/7;
+		BUTTON_HEIGHT = height/8;
+		
 		tank = new Sprite(ImageCache.getTexture("tank"));
 		tank.setPosition(0, 0);
 		tank.setOrigin(0, 0);
 		tank.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
 
 		tank_shine = new Sprite(ImageCache.getTexture("tank_shine"));
-		tank_shine.setPosition(-20,-20);
-		tank_shine.setOrigin(0, 0);
+		tank_shine.setPosition(-20, -20);
+		tank_shine.setOrigin(20, 20);
 		tank_shine.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
 
 		testName = "Fish Tank Example |";
@@ -66,21 +78,20 @@ public class FishTank extends BlankTestScreen {
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		createBubbles();
-
+		bubbleTimer.update(delta);
+		
 		if (following)
 			followFish();
 
 		batch.begin();
 		tank.draw(batch);		
 		batch.end();
-		
+
 		stage.act(delta);
 		stage.draw();
 
 		batch.begin();
 		for (PooledEffect effect : Effects){
-			//effect.getEmitters().first().setPosition(effect.getEmitters().first().getX() + 2, effect.getEmitters().first().getY() + 2);
 			effect.draw(batch, delta);
 			if (effect.isComplete()){
 				Effects.removeValue(effect, true);
@@ -90,14 +101,14 @@ public class FishTank extends BlankTestScreen {
 		}
 		tank_shine.draw(batch);
 		batch.end();
+
 		stageui.act(delta);
 		stageui.draw();
 
 		batchui.begin();
-		renderTestName(batchui);
+		Assets.font24.drawMultiLine(batchui, testName, 0, 24, width, HAlignment.RIGHT);
 		batchui.end();
 
-		//controller.update();
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 
@@ -109,26 +120,41 @@ public class FishTank extends BlankTestScreen {
 		cam.position.x = followedFish.getX();
 		cam.position.y = followedFish.getY();
 
-
-	}
-
-	@Override
-	protected void updateText() {
-		// TODO Auto-generated method stub
-
-	}
+	}	
 
 	@Override
-	protected void renderText() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void show() {
-		addInput();
+	public void show() {	
+		
+		bubbleTimer = new MyTimer(1f) {
+			
+			@Override
+			protected void perform() {
+				createBubbles();
+				setCap(MathUtils.random(0.5f, 1f));
+				
+			}
+		};
+		bubbleTimer.setRepeating(true);
+		bubbleTimer.start();
+		
+		batch = new SpriteBatch();
+		batchui = new SpriteBatch();
+		
+		stage = new Stage();
+		stageui = new Stage();
+		
+		width = Gdx.app.getGraphics().getWidth();
+		height = Gdx.app.getGraphics().getHeight();
+		
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, width, height);
+		cam.update();   
+		stage.setCamera(cam);
+		
+		InputMultiplexer im = new InputMultiplexer(stageui, stage);
+		Gdx.input.setInputProcessor(im);	
+		
 		Effects = new Array<PooledEffect>();
-		shapeRenderer = new ShapeRenderer();
 		cam.zoom = 1.4f;
 		gravity = 0;
 		friction = -0.1f;
@@ -136,7 +162,6 @@ public class FishTank extends BlankTestScreen {
 		conservedEnergy = 0.5f;
 		viscosity = 0.99f;
 
-		//addCameraControl(width, 0, height, 0);
 		backButton = new TextButton("Examples", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
@@ -151,6 +176,7 @@ public class FishTank extends BlankTestScreen {
 		stageui.addActor(backButton);	
 
 		fishes = new Array<Fish>();
+
 		for (int i = 0; i < 10; i++) {
 			fishes.add(new Fish(MathUtils.random(width), MathUtils.random(height), MathUtils.random(width/15, width/10), i, fishes));
 			fishes.get(i).setVelocity(MathUtils.random(-1.2f, 1.2f), MathUtils.random(-1.2f, 1.2f));
@@ -159,20 +185,21 @@ public class FishTank extends BlankTestScreen {
 		}
 	}
 
+
 	public void createBubbles() {
 
-		if (MathUtils.random(0, 100) < 3){
-			Effects.add(ParticleEffectsCache.getParticleEffect(ParticleEffectsCache.BUBBLES));
-			Effects.get(Effects.size - 1).setPosition(MathUtils.random(50, width - 50), 0);
-		}
-		//Gdx.app.log("Particles", "Particle Created");		
+		Effects.add(ParticleEffectsCache.getParticleEffect(ParticleEffectsCache.BUBBLES));
+		Effects.get(Effects.size - 1).setPosition(MathUtils.random(50, width - 50), 0);
+
 	}
 	private boolean following = false;
+
 	private void resetCamera(){
 		cam.position.x = width/2;
 		cam.position.y = height/2;
 		cam.zoom = 1.4f;		
 	}
+
 	public class Fish extends Actor {
 
 		MyTimer timer;
@@ -183,18 +210,19 @@ public class FishTank extends BlankTestScreen {
 		int id;
 		Color color = Color.WHITE;
 		Array<Fish> others;
-		TextureRegion texture = ImageCache.getTexture("fish");
-		public Fish(float xin, float yin, float din, int idin, Array<Fish> balls) {
+		Sprite sprite = new Sprite(ImageCache.getTexture("fish"));
+		
+		private float ySca = 1f;
+		public Fish(float xin, float yin, float din, int idin, Array<Fish> fishes) {
 			thisFish = this;
 			timer = new MyTimer(MathUtils.random(1f, 8f)) {				
 
-				@Override
+				@Override 
 				protected void perform() {
 					changeDirection(1f);				
 
 					timer.setCap(MathUtils.random(3.5f, 9f));
 				}
-
 
 			};
 			timer.start();
@@ -204,7 +232,7 @@ public class FishTank extends BlankTestScreen {
 			setY(yin);
 			diameter = din;
 			id = idin;
-			others = balls;	
+			others = fishes;	
 
 			setBounds(getX() - diameter/2, getY() - diameter/2, diameter,diameter);
 			setOrigin(diameter/2, diameter/2);
@@ -221,10 +249,10 @@ public class FishTank extends BlankTestScreen {
 						following = true;
 					}
 					else if (following && thisFish != followedFish){
-						
+
 						followedFish = thisFish;
 						following = true;
-						
+
 					}
 
 					else if (following && thisFish == followedFish){
@@ -239,22 +267,26 @@ public class FishTank extends BlankTestScreen {
 		private void changeDirection(float power) {
 
 			vx += MathUtils.random(-2f*power, 2f*power);
-			vy += MathUtils.random(-0.6f*power, 0.6f*power);
+			vy += MathUtils.random(-0.6f*power, 0.6f*power);				
+
+		}
+		private void calcRotation() {
+			float rot = MathUtils.atan2(vy, vx)*180/MathUtils.PI;
+
+			if (rot < 0)
+				rot += 360;			
+		
+			if (rot > 90 && rot < 270)
+				ySca = -1f;
+			else
+				ySca = 1f;
+			
+			setRotation(rot);
 
 		}
 		Color tempColor;
 		public void changeColor() {			
 			setColor(new Color(MathUtils.random(0f, 1f), MathUtils.random(0f, 1f), MathUtils.random(0f, 1f), 1f));
-		}
-
-		public void removeBall(Fish ball){
-
-			Gdx.app.log("", others.removeValue(ball, true) + "");
-
-
-			for (int i = 0; i < others.size; i++)
-				if (others.get(i) == ball)
-					Gdx.app.log("", "" + others.removeValue(others.get(i), true));
 		}
 
 		public void Fling(float velocityX, float velocityY) {
@@ -289,8 +321,6 @@ public class FishTank extends BlankTestScreen {
 					double ay = (targetY - others.get(i).getYOffset()) * hardness;
 					vx -= ax;
 					vy -= ay;
-					//others.get(i).vx += ax;
-					//others.get(i).vy += ay;
 				}
 			}   
 		}
@@ -331,69 +361,25 @@ public class FishTank extends BlankTestScreen {
 		public void addY(float amount){			
 			setY(getY() + amount);			
 		}
-		private void Flip (){
-
-			if (getActions().size <= 0){
-
-				float toScaleX;
-
-				if (getScaleX() > 0)
-					toScaleX = -1f;
-				else
-					toScaleX = 1f;
-
-				addAction(Actions.scaleTo(toScaleX, 1f, 0.3f, Interpolation.exp5Out));
-
-			}
-		}
+		
 		@Override
 		public void draw(Batch batch, float alpha) {
 			batch.setColor(getColor());
-			batch.draw(texture, getX(), getY(), 
+			batch.draw(sprite, getX(), getY(), 
 					getOriginX(), getOriginY(), 				
 					getWidth(), getHeight(), 
-					getScaleX(), getScaleY(),
+					-getScaleX(), ySca*getScaleY(),
 					getRotation());
-			batch.setColor(Color.WHITE);
-			//Assets.font24.draw(batch, "" + vx, getX(), getY());			
-
-			//			shapeRenderer.begin(ShapeType.Filled);
-			//			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-			//			shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
-			//			shapeRenderer.scale(getScaleX(), getScaleY(), 0);
-			//			shapeRenderer.setColor(getColor());
-			//			shapeRenderer.circle(getXOffset(), getYOffset(), diameter/2);
-			//			shapeRenderer.end();
-			//
-			//			shapeRenderer.begin(ShapeType.Line);
-			//			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-			//			shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
-			//			shapeRenderer.scale(getScaleX(), getScaleY(), 0);
-			//			shapeRenderer.setColor(Color.BLACK);
-			//			shapeRenderer.circle(getXOffset(), getYOffset(), diameter/2);
-			//			shapeRenderer.end();
-
+			batch.setColor(Color.WHITE);			
 		}
 
 		@Override
 		public void act(float delta){
+			super.act(delta);
 			timer.update(delta);
 			collide(delta);
 			move(delta);
-
-			if (vx > 0.15 && getScaleX() > 0)
-				Flip();
-			else if (vx < -0.15 && getScaleX() < 0)
-				Flip();
-
-			for (int i = 0; i < getActions().size; i++) {
-				Action action = getActions().get(i);
-				if (action.act(delta) && i < getActions().size) {
-					getActions().removeIndex(i);
-					action.setActor(null);
-					i--;
-				}
-			}
+			calcRotation();
 		}
 
 		public void setVelocity(float vx, float vy) {
@@ -409,6 +395,39 @@ public class FishTank extends BlankTestScreen {
 			setScale(1f);
 
 		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		this.width = Gdx.app.getGraphics().getWidth();
+		this.height = Gdx.app.getGraphics().getHeight();
+		BUTTON_WIDTH = width/7;
+		BUTTON_HEIGHT = height/8;
+		stage.setCamera(cam);
+		Gdx.gl.glViewport(0, 0, width, height);	
+		cam.update();
+		batch.setProjectionMatrix(cam.combined);
+		stage.setViewport(width, height, false);
+		stageui.setViewport(width, height, false);
+		
+	}
+
+	@Override
+	public void hide() {}
+
+	@Override
+	public void pause() {}
+
+	@Override
+	public void resume() {}
+
+	@Override
+	public void dispose() {
+		batch.dispose();
+		batchui.dispose();
+		stage.dispose();
+		stageui.dispose();
+		game.dispose();		
 	}
 
 }

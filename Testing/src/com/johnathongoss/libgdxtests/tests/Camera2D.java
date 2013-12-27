@@ -100,8 +100,8 @@ public class Camera2D extends BlankTestScreen{
 		 * Reset
 		 */		
 
-		tempButton = new TextButton("Reset Camera", skin);
-		tempButton.addListener(new ClickListener() {			
+		debugButton = new TextButton("Reset Camera", skin);
+		debugButton.addListener(new ClickListener() {			
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -112,7 +112,7 @@ public class Camera2D extends BlankTestScreen{
 			}
 
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 
 		for (TextButton button : buttons)
 			stageui.addActor(button);			

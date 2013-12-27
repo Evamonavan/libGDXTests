@@ -1,4 +1,4 @@
-package com.johnathongoss.libgdxtests.tests;
+package com.johnathongoss.libgdx.examples;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -36,10 +36,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 
-public class Box2D extends BlankTestScreen implements GestureListener, InputProcessor{
+public class FishTankBox2D extends BlankTestScreen implements GestureListener, InputProcessor{
 
-	public Box2D(Game game) {
+	public FishTankBox2D(Game game) {
 		super(game);
 
 		testName = "Box2D Test |";
@@ -83,7 +84,7 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		debugRenderer = new Box2DDebugRenderer();
 		cam = new OrthographicCamera();
 
-		world = new World(new Vector2(0, -9.81f), true);	
+		world = new World(new Vector2(0, 0), true);	
 		
 		world.setContactListener(new ContactListener() {
 			
@@ -106,11 +107,11 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 				
 				Vector2 dir = new Vector2();
 				dir.x = MathUtils.random(-3f, 3f);
-				dir.y = MathUtils.random(-1f, 1f);
+				dir.y = MathUtils.random(-0.3f, 0.3f);
 				//contact.getFixtureA().getBody().setLinearVelocity(dir);
 				//contact.getFixtureB().getBody().setTransform(position, angle)
-				//contact.getFixtureB().getBody().setLinearVelocity(dir.scl(-1, -1));
-				//contact.getFixtureB().getBody().setLinearVelocity(contact.getFixtureB().getBody().getLinearVelocity().add(contact.getFixtureA().getBody().getLinearVelocity()));
+				contact.getFixtureB().getBody().setLinearVelocity(dir.scl(-1, -1));
+				contact.getFixtureB().getBody().setLinearVelocity(contact.getFixtureB().getBody().getLinearVelocity().add(contact.getFixtureA().getBody().getLinearVelocity()));
 			}
 			
 			@Override
@@ -136,59 +137,11 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		createWall(new Vector2(width, 0), new Vector2(width, height), 1, 0.2f, 0.8f, bodyDef, fixtureDef);
 		createWall(new Vector2(0, height), new Vector2(width, height), 1, 0.2f, 0.8f, bodyDef, fixtureDef);
 
-		for (int i = 0; i < 12; i++)
+		for (int i = 0; i < 10; i++)
 			createBall(MathUtils.random(0, width), MathUtils.random(0, height), MathUtils.random(width/15, width/30), 1f, 0f, .9f, bodyDef, fixtureDef);
-
-		for (int i = 0; i < 3; i++)
-			creatBox(MathUtils.random(0, width), MathUtils.random(0, height), MathUtils.random(width/7, height/10), MathUtils.random(width/7, height/10), 1, 0.3f, .8f, bodyDef, fixtureDef);
 	}  
 
-	private void creatBox(float x, float y, float w, float h,
-			float density, float friction, float restitution, BodyDef bodyDef, FixtureDef fixtureDef) {
-		bodyDef.position.set(WORLD_TO_BOX*x, WORLD_TO_BOX*y);
-		bodyDef.angularVelocity = 0;
 	
-		PolygonShape boxShape = new PolygonShape();
-		boxShape.setAsBox(WORLD_TO_BOX*w/2, WORLD_TO_BOX*h/2);
-
-		fixtureDef.shape = boxShape;
-		fixtureDef.density = density;
-		fixtureDef.friction = friction;
-		fixtureDef.restitution = restitution;
-		
-		Sprite sprite = new Sprite(ImageCache.getTexture("background"));
-		sprite.setSize(WORLD_TO_BOX*w, WORLD_TO_BOX*h);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-
-		Body box = world.createBody(bodyDef);
-				
-		box.setUserData(sprite);
-		box.createFixture(fixtureDef);
-
-		boxShape.dispose();		
-	}
-
-	private void createScene(BodyDef bodyDef, FixtureDef fixtureDef) {
-
-		//createWall(new Vector2(0, 0), cam.viewportWidth, 0, 0.0f);
-		//createWall(new Vector2(0, cam.viewportHeight), cam.viewportWidth, 0f, 0);
-		//createWall(new Vector2(0, 0), 0,  cam.viewportHeight, 0.5f);
-		//createWall(new Vector2(cam.viewportWidth, 0), 0,  cam.viewportHeight, 0);
-
-		for (int i = 0; i < 25; i++){			
-			createBall(
-					MathUtils.random(0, 3), 
-					MathUtils.random(0, 3), 
-					MathUtils.random(0.2f, 1f), 
-					0.8f, 	//Density
-					0.10f, 	//Friction
-					0.82f,
-					bodyDef,
-					fixtureDef); 	//Restitution
-		}
-
-	}
-
 	private void createBall(float x, float y, float radius,
 			float density, float friction, float restitution, BodyDef bodyDef, FixtureDef fixtureDef) {
 
@@ -196,6 +149,8 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		bodyDef.position.x = x*WORLD_TO_BOX;
 		bodyDef.position.y = y*WORLD_TO_BOX;
 		bodyDef.angularVelocity = 0;
+		bodyDef.angularDamping = 1f;
+		bodyDef.linearDamping = 0.95f;
 
 		CircleShape ballShape = new CircleShape();
 		ballShape.setRadius(radius*WORLD_TO_BOX);
@@ -206,8 +161,7 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		fixtureDef.friction = .25f;
 		
 		
-		
-		Sprite sprite = new Sprite(ImageCache.getTexture("circle"));
+		Sprite sprite = new Sprite(ImageCache.getTexture("fish"));
 		sprite.setSize(radius*2*WORLD_TO_BOX, radius*2*WORLD_TO_BOX);
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 

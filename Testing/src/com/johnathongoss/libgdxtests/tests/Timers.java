@@ -67,8 +67,8 @@ public class Timers extends BlankTestScreen{
 		 * Start
 		 */		
 
-		tempButton = new TextButton("Start", skin);
-		tempButton.addListener(new ClickListener() {			
+		debugButton = new TextButton("Start", skin);
+		debugButton.addListener(new ClickListener() {			
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -78,14 +78,14 @@ public class Timers extends BlankTestScreen{
 			}
 
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 		
 		/*
 		 * Start
 		 */		
 
-		tempButton = new TextButton("Pause", skin);
-		tempButton.addListener(new ClickListener() {			
+		debugButton = new TextButton("Pause", skin);
+		debugButton.addListener(new ClickListener() {			
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -95,14 +95,14 @@ public class Timers extends BlankTestScreen{
 			}
 
 		});		
-		buttons.add(tempButton);	
+		buttons.add(debugButton);	
 		
 		/*
 		 * Repeat
 		 */		
 
-		tempButton = new TextButton("Repeat", skin);
-		tempButton.addListener(new ClickListener() {			
+		debugButton = new TextButton("Repeat", skin);
+		debugButton.addListener(new ClickListener() {			
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -110,14 +110,14 @@ public class Timers extends BlankTestScreen{
 			}
 
 		});		
-		buttons.add(tempButton);
+		buttons.add(debugButton);
 		
 		/*
 		 * Reset
 		 */		
 
-		tempButton = new TextButton("Reset", skin);
-		tempButton.addListener(new ClickListener() {			
+		debugButton = new TextButton("Reset", skin);
+		debugButton.addListener(new ClickListener() {			
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -127,7 +127,7 @@ public class Timers extends BlankTestScreen{
 			}
 
 		});		
-		buttons.add(tempButton);				
+		buttons.add(debugButton);				
 
 		for (TextButton button : buttons)
 			stageui.addActor(button);					

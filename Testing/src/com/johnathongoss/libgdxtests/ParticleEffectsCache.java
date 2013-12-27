@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
 public class ParticleEffectsCache {
 
-	public static final int FIRE = 0, POISON = 1, BLOOD = 2, BUBBLES = 3;
+	public static final int FIRE = 0, SNOW = 1, BLOOD = 2, BUBBLES = 3;
 
-	private static ParticleEffectPool pool_fire, pool_poison, pool_blood, pool_bubbles;
+	private static ParticleEffectPool pool_fire, pool_snow, pool_blood, pool_bubbles;
 
-	private static ParticleEffect 	fx_fire, fx_poison, fx_blood, fx_bubbles;
+	private static ParticleEffect 	fx_fire, fx_snow, fx_blood, fx_bubbles;
 
 
 
@@ -22,10 +22,10 @@ public class ParticleEffectsCache {
 
 		pool_fire = new ParticleEffectPool(fx_fire, 0, 150);
 		
-		fx_poison = new ParticleEffect();
-		fx_poison.load(Gdx.files.internal("fx/poison.p"), Gdx.files.internal("fx"));			
+		fx_snow = new ParticleEffect();
+		fx_snow.load(Gdx.files.internal("fx/snow.p"), Gdx.files.internal("fx"));			
 
-		pool_poison = new ParticleEffectPool(fx_poison, 0, 150);
+		pool_snow = new ParticleEffectPool(fx_snow, 0, 150);
 		
 		fx_blood = new ParticleEffect();
 		fx_blood.load(Gdx.files.internal("fx/blood.p"), Gdx.files.internal("fx"));			
@@ -46,8 +46,8 @@ public class ParticleEffectsCache {
 			effect = pool_fire.obtain();			
 			break;
 		}
-		case POISON: {
-			effect = pool_poison.obtain();			
+		case SNOW: {
+			effect = pool_snow.obtain();			
 			break;
 		}
 		case BLOOD: {

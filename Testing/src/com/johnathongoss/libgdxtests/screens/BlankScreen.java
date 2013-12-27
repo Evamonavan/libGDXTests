@@ -11,6 +11,8 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class BlankScreen implements Screen{
@@ -24,26 +26,41 @@ public abstract class BlankScreen implements Screen{
 
 	protected CameraController controller;
 	protected GestureDetector gestureDetector;
+	
+	/** 
+	 * 
+	 * Box2D
+	 * 
+	 * */
+	
+	public World world; 
+	Box2DDebugRenderer debugRenderer; 
+
+	protected static final float BOX_STEP = 1/60f;  
+	protected static final int BOX_VELOCITY_ITERATIONS = 6;  
+	protected static final int BOX_POSITION_ITERATIONS = 2;  
+	protected static final float WORLD_TO_BOX = 0.02f;  
+	protected static final float BOX_WORLD_TO = 50f;  
+	protected boolean showDebug = false;
 
 	public BlankScreen(Game game) {
 		this.game = game;
-
-		width = Gdx.app.getGraphics().getWidth();
-		height = Gdx.app.getGraphics().getHeight();
 
 		batch = new SpriteBatch();
 		batchui = new SpriteBatch();
 		stage = new Stage();
 		stageui = new Stage();
 		
-		InputMultiplexer im = new InputMultiplexer(stageui, stage);
-		Gdx.input.setInputProcessor(im);
-
+		width = Gdx.app.getGraphics().getWidth();
+		height = Gdx.app.getGraphics().getHeight();
+		
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, width, height);
 		cam.update();   
-		stage.setCamera(cam);
-
+		stage.setCamera(cam);		
+		
+		InputMultiplexer im = new InputMultiplexer(stageui, stage);
+		Gdx.input.setInputProcessor(im);
 	}
 
 	@Override
@@ -73,15 +90,14 @@ public abstract class BlankScreen implements Screen{
 		width = Gdx.app.getGraphics().getWidth();
 		height = Gdx.app.getGraphics().getHeight();
 
-		//cam = new OrthographicCamera();
-		//cam.setToOrtho(false, width, height);
-		//cam.update();   		
 		stage.setCamera(cam);
-		//stageui.setCamera(cam);
+		
 		Gdx.gl.glViewport(0, 0, width, height);	
+		
 		cam.update();
+		
 		batch.setProjectionMatrix(cam.combined);
-		//batchui.setProjectionMatrix(cam.combined);
+		
 		stage.setViewport(width, height, false);
 		stageui.setViewport(width, height, false);
 
