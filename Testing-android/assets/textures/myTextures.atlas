@@ -38,3 +38,11 @@ circle
   orig: 100, 100
   offset: 0, 0
   index: -1
+bubble
+  rotate: false
+  xy: 1325, 670
+  size: 74, 73
+  split: 24, 24, 24, 24
+  orig: 74, 73
+  offset: 0, 0
+  index: -1

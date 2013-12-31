@@ -14,15 +14,16 @@ import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
+import com.johnathongoss.libgdxtests.utils.Dice;
 import com.johnathongoss.libgdxtests.utils.Timers;
 
-public class Examples extends BlankTestScreen {
+public class Utils extends BlankTestScreen {
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
-	public Examples(Game game) {
+	public Utils(Game game) {
 		super(game);				
-		Text.add("Examples |");
+		Text.add("Utils |");
 	}
 
 	@Override
@@ -61,14 +62,14 @@ public class Examples extends BlankTestScreen {
 		 * Pop Corn
 		 */
 
-		debugButton = new TextButton("Pop Corn", skin);
+		debugButton = new TextButton("Timer", skin);
 		debugButton.setHeight(BUTTON_HEIGHT);
 		debugButton.setWidth(BUTTON_WIDTH);
 
 		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new PopCorns(game));
+				game.setScreen(new Timers(game));
 			}
 		});		
 
@@ -78,14 +79,14 @@ public class Examples extends BlankTestScreen {
 		 * Fish Tank
 		 */
 
-		debugButton = new TextButton("Fish Tank", skin);
+		debugButton = new TextButton("Dice", skin);
 		debugButton.setHeight(BUTTON_HEIGHT);
 		debugButton.setWidth(BUTTON_WIDTH);
 
 		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new FishTank(game));
+				game.setScreen(new Dice(game));
 			}
 		});		
 

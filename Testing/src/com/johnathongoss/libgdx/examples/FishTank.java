@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
@@ -29,38 +30,47 @@ import com.johnathongoss.libgdxtests.screens.Examples;
 import com.johnathongoss.libgdxtests.utils.MyTimer;
 
 public class FishTank implements Screen {
+	
+	/*
+	 * Essentials
+	 */
 
 	private Game game;
-	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-	private MyTimer bubbleTimer;
-	
+	private String testName;
+
 	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
 	private OrthographicCamera cam;
 	private Stage stage, stageui;
 	private SpriteBatch batch, batchui;
-	
+
+	/*
+	 * Assets
+	 */
+
+	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+	private TextButton backButton;
+	private MyTimer bubbleTimer;	
+	private  Array<PooledEffect> Effects;
+	Sprite tank, tank_shine;
+
 	public Array<Fish> fishes;
 	public float gravity;
 	public float friction;
 	public float conservedEnergy;
 	public double hardness;
-	public float viscosity = 0.992f;
-	Sprite tank, tank_shine;
-	private  Array<PooledEffect> Effects;
+	public float viscosity = 0.992f;	
+
 	private Fish followedFish;
 
-	private String testName;
-
-	private TextButton backButton;
 	public FishTank(Game game) {
 		this.game = game;
 		
 		width = Gdx.app.getGraphics().getWidth();
 		height = Gdx.app.getGraphics().getHeight();
-		
+
 		BUTTON_WIDTH = width/7;
 		BUTTON_HEIGHT = height/8;
-		
+
 		tank = new Sprite(ImageCache.getTexture("tank"));
 		tank.setPosition(0, 0);
 		tank.setOrigin(0, 0);
@@ -79,7 +89,7 @@ public class FishTank implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		bubbleTimer.update(delta);
-		
+
 		if (following)
 			followFish();
 
@@ -124,36 +134,36 @@ public class FishTank implements Screen {
 
 	@Override
 	public void show() {	
-		
+
 		bubbleTimer = new MyTimer(1f) {
-			
+
 			@Override
 			protected void perform() {
 				createBubbles();
 				setCap(MathUtils.random(0.5f, 1f));
-				
+
 			}
 		};
 		bubbleTimer.setRepeating(true);
 		bubbleTimer.start();
-		
+
 		batch = new SpriteBatch();
 		batchui = new SpriteBatch();
-		
+
 		stage = new Stage();
 		stageui = new Stage();
-		
+
 		width = Gdx.app.getGraphics().getWidth();
 		height = Gdx.app.getGraphics().getHeight();
-		
+
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, width, height);
 		cam.update();   
 		stage.setCamera(cam);
-		
+
 		InputMultiplexer im = new InputMultiplexer(stageui, stage);
 		Gdx.input.setInputProcessor(im);	
-		
+
 		Effects = new Array<PooledEffect>();
 		cam.zoom = 1.4f;
 		gravity = 0;
@@ -177,14 +187,13 @@ public class FishTank implements Screen {
 
 		fishes = new Array<Fish>();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 8; i++) {
 			fishes.add(new Fish(MathUtils.random(width), MathUtils.random(height), MathUtils.random(width/15, width/10), i, fishes));
 			fishes.get(i).setVelocity(MathUtils.random(-1.2f, 1.2f), MathUtils.random(-1.2f, 1.2f));
 			fishes.get(i).changeColor();
 			stage.addActor(fishes.get(i));
 		}
 	}
-
 
 	public void createBubbles() {
 
@@ -211,7 +220,7 @@ public class FishTank implements Screen {
 		Color color = Color.WHITE;
 		Array<Fish> others;
 		Sprite sprite = new Sprite(ImageCache.getTexture("fish"));
-		
+
 		private float ySca = 1f;
 		public Fish(float xin, float yin, float din, int idin, Array<Fish> fishes) {
 			thisFish = this;
@@ -265,7 +274,9 @@ public class FishTank implements Screen {
 			setTouchable(Touchable.enabled);
 		} 
 		private void changeDirection(float power) {
-
+			if (getScaleX() == 1f)
+				addAction(Actions.sequence(Actions.scaleTo(.4f, 1f, 0.15f), Actions.scaleTo(1f, 1f, 0.15f)));
+			
 			vx += MathUtils.random(-2f*power, 2f*power);
 			vy += MathUtils.random(-0.6f*power, 0.6f*power);				
 
@@ -275,12 +286,12 @@ public class FishTank implements Screen {
 
 			if (rot < 0)
 				rot += 360;			
-		
+
 			if (rot > 90 && rot < 270)
 				ySca = -1f;
 			else
 				ySca = 1f;
-			
+
 			setRotation(rot);
 
 		}
@@ -361,7 +372,7 @@ public class FishTank implements Screen {
 		public void addY(float amount){			
 			setY(getY() + amount);			
 		}
-		
+
 		@Override
 		public void draw(Batch batch, float alpha) {
 			batch.setColor(getColor());
@@ -399,17 +410,18 @@ public class FishTank implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		this.width = Gdx.app.getGraphics().getWidth();
-		this.height = Gdx.app.getGraphics().getHeight();
+		this.width = width;
+		this.height = height;
 		BUTTON_WIDTH = width/7;
 		BUTTON_HEIGHT = height/8;
+
 		stage.setCamera(cam);
 		Gdx.gl.glViewport(0, 0, width, height);	
 		cam.update();
 		batch.setProjectionMatrix(cam.combined);
 		stage.setViewport(width, height, false);
 		stageui.setViewport(width, height, false);
-		
+		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
 	}
 
 	@Override

@@ -20,8 +20,8 @@ public class Particles extends BlankTestScreen {
 	private  Array<PooledEffect> Effects;
 	private MyInputProcessor inputProcessor;
 	private TextButton switchButton;
-	protected int index = 0;
-	private boolean limit;
+	protected int index = 0, noParticles = 4;
+	private boolean limit = true;
 	private TextButton limitButton;
 
 	public Particles(Game game) {
@@ -66,7 +66,7 @@ public class Particles extends BlankTestScreen {
 		addBackButton();
 		addInput();		
 
-		switchButton = new TextButton("Particle " + index, skin);
+		switchButton = new TextButton("Effect " + index, skin);
 		switchButton.setHeight(BUTTON_HEIGHT);
 		switchButton.setWidth(BUTTON_WIDTH);		
 		switchButton.addListener(new ClickListener() {
@@ -81,9 +81,9 @@ public class Particles extends BlankTestScreen {
 
 				}
 				index ++;
-				if (index > 3)
+				if (index > noParticles)
 					index = 0;
-				switchButton.setText("Particle " + index);
+				switchButton.setText("Effect " + index);
 			}
 		});	
 		switchButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);

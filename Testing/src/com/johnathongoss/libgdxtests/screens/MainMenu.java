@@ -14,15 +14,17 @@ import com.johnathongoss.libgdxtests.tests.Box2DTest;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
 import com.johnathongoss.libgdxtests.tests.Particles;
-import com.johnathongoss.libgdxtests.tests.Timers;
+import com.johnathongoss.libgdxtests.tests.SpeechBubbles;
+import com.johnathongoss.libgdxtests.utils.Dice;
+import com.johnathongoss.libgdxtests.utils.Timers;
 
 public class MainMenu extends BlankTestScreen {
 
-	TextButton exampleButton;
+	TextButton exampleButton, utilButton;
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.4.2 |");
+		Text.add("0.5 |");
 		Text.add("");
 		Text.add("johnathongoss.com |");
 	}
@@ -33,12 +35,15 @@ public class MainMenu extends BlankTestScreen {
 		stage.act(delta);
 		stage.draw();	
 		
+		stageui.act(delta);
+		stageui.draw();
+		
 		renderText();		
 	}	
 
 	@Override
 	public void show(){
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(stageui);
 		buttons = new Array<TextButton>();
 		
 		exampleButton = new TextButton("Examples", skin);
@@ -51,6 +56,23 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});	
 		exampleButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		stageui.addActor(exampleButton);
+		
+		/**
+		 * To Utils
+		 */
+		
+		utilButton = new TextButton("Utils", skin);
+		utilButton.setHeight(BUTTON_HEIGHT);
+		utilButton.setWidth(BUTTON_WIDTH);		
+		utilButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Utils(game));
+			}
+		});	
+		utilButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
+		stageui.addActor(utilButton);
 		
 		/*
 		 * Box 2D Test
@@ -101,8 +123,7 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});		
 		
-		buttons.add(debugButton);
-		
+		buttons.add(debugButton);		
 		
 		
 		/*
@@ -120,25 +141,8 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});		
 		
-		buttons.add(debugButton);
-		
-		/*
-		 * Timer Test
-		 */
-		
-		debugButton = new TextButton("Timers", skin);
-		debugButton.setHeight(BUTTON_HEIGHT);
-		debugButton.setWidth(BUTTON_WIDTH);
-		
-		debugButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new Timers(game));
-			}
-		});		
-		
-		buttons.add(debugButton);
-		
+		buttons.add(debugButton);		
+			
 		/*
 		 * Particles
 		 */
@@ -154,13 +158,28 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});		
 		
+		buttons.add(debugButton);
+		
+		/*
+		 * Speech bubbles
+		 */
+		
+		debugButton = new TextButton("Speech", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+		
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new SpeechBubbles(game));
+			}
+		});		
+		
 		buttons.add(debugButton);	
 		
 		for (TextButton button : buttons){			
-			stage.addActor(button);			
-		}
-		
-		stage.addActor(exampleButton);
+			stageui.addActor(button);			
+		}		
 	}	
 	
 	@Override

@@ -26,13 +26,13 @@ public abstract class BlankScreen implements Screen{
 
 	protected CameraController controller;
 	protected GestureDetector gestureDetector;
-	
+
 	/** 
 	 * 
 	 * Box2D
 	 * 
 	 * */
-	
+
 	public World world; 
 	Box2DDebugRenderer debugRenderer; 
 
@@ -50,15 +50,15 @@ public abstract class BlankScreen implements Screen{
 		batchui = new SpriteBatch();
 		stage = new Stage();
 		stageui = new Stage();
-		
+
 		width = Gdx.app.getGraphics().getWidth();
 		height = Gdx.app.getGraphics().getHeight();
-		
+
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, width, height);
 		cam.update();   
 		stage.setCamera(cam);		
-		
+
 		InputMultiplexer im = new InputMultiplexer(stageui, stage);
 		Gdx.input.setInputProcessor(im);
 	}
@@ -89,15 +89,15 @@ public abstract class BlankScreen implements Screen{
 
 		width = Gdx.app.getGraphics().getWidth();
 		height = Gdx.app.getGraphics().getHeight();
-
+		
 		stage.setCamera(cam);
-		
+
 		Gdx.gl.glViewport(0, 0, width, height);	
-		
+
 		cam.update();
-		
+
 		batch.setProjectionMatrix(cam.combined);
-		
+
 		stage.setViewport(width, height, false);
 		stageui.setViewport(width, height, false);
 
@@ -117,14 +117,14 @@ public abstract class BlankScreen implements Screen{
 	public void resume() {
 
 	}	
-	
+
 	protected void addCameraControl(float x1, float x2, float y1, float y2){
 		controller = new CameraController();
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, controller);
 
 		InputMultiplexer im = new InputMultiplexer(stageui, stage, gestureDetector);
 		Gdx.input.setInputProcessor(im);
-		
+
 		controller.setBounds(x1, x2, y1, y2);
 
 	}
@@ -133,7 +133,7 @@ public abstract class BlankScreen implements Screen{
 		public float velX, velY;
 		boolean flinging = false;
 		float initialScale = 1;
-				
+
 		float boundX = width*cam.zoom/2, boundX2 = 0, boundY = 0, boundY2 = height;
 
 		public void updateBounds(){
@@ -142,9 +142,9 @@ public abstract class BlankScreen implements Screen{
 			boundX2 = width - width*cam.zoom/2;
 			boundY = height*cam.zoom/2;
 			boundY2 = height - height*cam.zoom/2;
-			
+
 		}
-		
+
 		public boolean touchDown (float x, float y, int pointer, int button) {
 			flinging = false;
 			initialScale = cam.zoom;
@@ -175,7 +175,7 @@ public abstract class BlankScreen implements Screen{
 		@Override
 		public boolean pan (float x, float y, float deltaX, float deltaY) {
 			// Gdx.app.log("GestureDetectorTest", "pan at " + x + ", " + y);
-			
+
 			cam.position.add(-checkBoundsX(deltaX) * cam.zoom, checkBoundsY(deltaY) * cam.zoom, 0);
 
 			return false;
@@ -187,29 +187,29 @@ public abstract class BlankScreen implements Screen{
 				cam.position.x = boundX;
 				return 0;
 			}
-			
+
 			if (cam.position.x <= boundX2 && deltaX > 0){
 				velX = 0;
 				cam.position.x = boundX2;
 				return 0;
 			}
-			
+
 			return deltaX;
 		}
 		private float checkBoundsY(float deltaY) {
-						
+
 			if (cam.position.y >= boundY && deltaY > 0){
 				velY = 0;
 				cam.position.y = boundY;
 				return 0;
 			}
-			
+
 			if (cam.position.y <= boundY2 && deltaY < 0){
 				velX = 0;
 				cam.position.y = boundY2;
 				return 0;
 			}
-			
+
 			return deltaY;
 		}
 
@@ -232,58 +232,43 @@ public abstract class BlankScreen implements Screen{
 			//System.out.println(cam.zoom);
 			return false;
 		}
-		
+
 		private float dotProduct(Vector2 v1, Vector2 v2){
-			
+
 			return v1.x*v2.x + v1.y*v2.y;
-			
-		}
-		
-		private float magnitude (Vector2 v){			
-			
-			return (float) Math.sqrt((double)(dotProduct(v, v)));
+
 		}
 		
 		public Vector2 getNormalized(Vector2 v) {
-		    float l = v.len();
-		    if (l == 0)
-		      return new Vector2();
-		    else
-		      return new Vector2(v.x / l, v.y / l);
-		  }
-		
-		private float angle(Vector2 v1, Vector2 v2){
-//			Vector2 na = getNormalized(v1);
-//		    Vector2 nb = getNormalized(v2);
-//		    
-		    return (float)(Math.atan2(v2.y, v2.x) - Math.atan2(v1.y, v2.x));
-		    
-//		    return (float) Math.acos((v1.dot(v2))/(magnitude(v1)*magnitude(v2)));
-		    
+			float l = v.len();
+			if (l == 0)
+				return new Vector2();
+			else
+				return new Vector2(v.x / l, v.y / l);
 		}
-		
+
 		Vector2 tempInV1, tempInV2, tempV1, tempV2;
-		
+
 		@Override
 		public boolean pinch (Vector2 initialFirstPointer, Vector2 initialSecondPointer, Vector2 firstPointer, Vector2 secondPointer) {
 			//System.out.println(":" + angle(initialFirstPointer.sub(initialSecondPointer), firstPointer.sub(secondPointer)));
 			//Gdx.app.log("Rotate", ":" + angle(initialFirstPointer.sub(initialSecondPointer), firstPointer.sub(secondPointer)));
-			
-//			tempV1 = initialFirstPointer.sub(initialSecondPointer);
-//			tempV2 = firstPointer.sub(secondPointer);
-//			
-//			tempInV1 = initialFirstPointer;
-//			tempInV2 = initialSecondPointer;
-//			
-//			//cam.rotate(0.1f);
-//			cam.rotate(angle(tempV1, tempV2));
+
+			//			tempV1 = initialFirstPointer.sub(initialSecondPointer);
+			//			tempV2 = firstPointer.sub(secondPointer);
+			//			
+			//			tempInV1 = initialFirstPointer;
+			//			tempInV2 = initialSecondPointer;
+			//			
+			//			//cam.rotate(0.1f);
+			//			cam.rotate(angle(tempV1, tempV2));
 			return false;
 		}
 
 		public void update () {				
 
 			//updateBounds();
-			
+
 			if (Gdx.input.isKeyPressed(Keys.S))
 				cam.zoom += 0.03;
 			if (Gdx.input.isKeyPressed(Keys.W))
@@ -306,7 +291,7 @@ public abstract class BlankScreen implements Screen{
 			boundX2 = x2;
 			boundY = y1;
 			boundY2 = y2;
-			
+
 		}
 	}
 

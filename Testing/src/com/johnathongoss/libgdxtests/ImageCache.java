@@ -2,6 +2,7 @@ package com.johnathongoss.libgdxtests;
 
 import com.badlogic.gdx.Gdx;  
 import com.badlogic.gdx.graphics.Texture;  
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;  
 import com.badlogic.gdx.graphics.g2d.TextureRegion;  
   
@@ -22,4 +23,10 @@ public class ImageCache {
     public static TextureRegion getFrame (String name, int index) {  
         return atlas.findRegion(name, index);  
     }  
+    
+    public static NinePatch CreatePatch(String name){
+    	
+    	return atlas.createPatch(name);
+    	
+    }
 }  
