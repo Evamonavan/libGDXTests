@@ -9,9 +9,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Testing";
 		cfg.useGL20 = true;
-		cfg.width = 640;
+		cfg.width = 440;
 		cfg.height = 360;
-		
 		new LwjglApplication(new Testing(), cfg);
 	}
 }

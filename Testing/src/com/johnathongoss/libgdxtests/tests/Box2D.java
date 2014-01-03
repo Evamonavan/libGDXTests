@@ -255,8 +255,6 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 	@Override  
 	public void dispose() {  
 		super.dispose();
-
-		batch.dispose();
 		debugRenderer.dispose();
 		world.dispose();
 	}  

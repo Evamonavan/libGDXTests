@@ -123,8 +123,8 @@ colorsCount: 6
 colors0: 0.8666667
 colors1: 0.2901961
 colors2: 0.27058825
-colors3: 0.68235296
-colors4: 0.05490196
+colors3: 0.8039216
+colors4: 0.0627451
 colors5: 0.0
 timelineCount: 2
 timeline0: 0.0
@@ -269,9 +269,9 @@ timeline1: 0.77397263
 timeline2: 1.0
 - Tint - 
 colorsCount: 6
-colors0: 0.64705884
-colors1: 0.13333334
-colors2: 0.101960786
+colors0: 0.7411765
+colors1: 0.14509805
+colors2: 0.11764706
 colors3: 0.9019608
 colors4: 0.27058825
 colors5: 0.21960784

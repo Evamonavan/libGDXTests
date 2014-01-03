@@ -99,8 +99,8 @@ timeline11: 1.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 60.0
-highMax: 250.0
+highMin: 70.0
+highMax: 270.0
 relative: false
 scalingCount: 4
 scaling0: 0.25490198
@@ -293,8 +293,8 @@ timeline8: 1.0
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 25.0
-highMax: 50.0
+highMin: 40.0
+highMax: 80.0
 relative: false
 scalingCount: 4
 scaling0: 1.0
@@ -308,8 +308,8 @@ timeline2: 0.72602737
 timeline3: 1.0
 - Angle - 
 active: true
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 90.0
+lowMax: 90.0
 highMin: 45.0
 highMax: 135.0
 relative: false

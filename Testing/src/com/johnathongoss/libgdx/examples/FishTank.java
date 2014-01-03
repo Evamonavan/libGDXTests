@@ -140,7 +140,7 @@ public class FishTank implements Screen {
 			@Override
 			protected void perform() {
 				createBubbles();
-				setCap(MathUtils.random(0.5f, 1f));
+				setCap(MathUtils.random(0.4f, 1f));
 
 			}
 		};
@@ -274,12 +274,16 @@ public class FishTank implements Screen {
 			setTouchable(Touchable.enabled);
 		} 
 		private void changeDirection(float power) {
-			if (getScaleX() == 1f)
-				addAction(Actions.sequence(Actions.scaleTo(.4f, 1f, 0.15f), Actions.scaleTo(1f, 1f, 0.15f)));
+			animate();
 			
 			vx += MathUtils.random(-2f*power, 2f*power);
 			vy += MathUtils.random(-0.6f*power, 0.6f*power);				
 
+		}
+		private void animate() {
+			if (getScaleX() == 1f){
+				addAction(Actions.sequence(Actions.scaleTo(.4f, 1f, 0.15f), Actions.scaleTo(1f, 1f, 0.15f)));
+			}
 		}
 		private void calcRotation() {
 			float rot = MathUtils.atan2(vy, vx)*180/MathUtils.PI;
@@ -349,18 +353,22 @@ public class FishTank implements Screen {
 			addY(vy);
 
 			if (getXOffset() + diameter/2> width) {
+				animate();
 				setX(width - diameter);
 				vx *= friction; 
 			}
 			else if (getXOffset() - diameter/2 < 0) {
+				animate();
 				setX(0);
 				vx *= friction;
 			}
 			if (getYOffset() + diameter/2> height) {
+				animate();
 				setY(height - diameter);
 				vy *= friction; 
 			} 
 			else if (getYOffset() - diameter/2 < 0) {
+				animate();
 				setY(0);
 				vy *= friction;
 			}

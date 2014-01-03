@@ -5,44 +5,79 @@ filter: Nearest,Nearest
 repeat: none
 tank_shine
   rotate: false
-  xy: 1, 505
+  xy: 1, 580
   size: 680, 440
   orig: 680, 440
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 1, 103
+  xy: 1, 178
   size: 640, 400
   orig: 640, 400
   offset: 0, 0
   index: -1
 tank
   rotate: false
-  xy: 683, 545
+  xy: 683, 620
   size: 640, 400
   orig: 640, 400
   offset: 0, 0
   index: -1
 fish
   rotate: false
-  xy: 1325, 745
+  xy: 1325, 820
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
+brian
+  rotate: false
+  xy: 1, 76
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 circle
   rotate: false
-  xy: 1, 1
+  xy: 1325, 718
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+ron
+  rotate: false
+  xy: 1527, 920
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+veronica
+  rotate: false
+  xy: 103, 76
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+worker
+  rotate: false
+  xy: 1629, 920
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 bubble
   rotate: false
-  xy: 1325, 670
+  xy: 1, 1
   size: 74, 73
   split: 24, 24, 24, 24
   orig: 74, 73
+  offset: 0, 0
+  index: -1
+bubble_pointer
+  rotate: false
+  xy: 643, 554
+  size: 31, 24
+  orig: 31, 24
   offset: 0, 0
   index: -1

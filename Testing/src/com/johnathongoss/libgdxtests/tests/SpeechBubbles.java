@@ -4,36 +4,45 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.screens.BlankScreen;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
-import com.johnathongoss.libgdxtests.utils.MyTimer;
+import com.johnathongoss.libgdxtests.utils.SpeechBubble;
 
 public class SpeechBubbles extends BlankScreen implements InputProcessor{
 
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
 	private String testName = "Speech Bubbles |";
+	private boolean usePics = false;
+	
+    // SpeechBubble pool.
+    private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
+        @Override
+        protected SpeechBubble newObject() {
+                return new SpeechBubble();
+        }
+    };
 
-	private String texts[] = {"What did the apple say to the tree?",
+	private String texts[] = {"Did you see that ludicrous display last night?", "What did the apple say to the tree?",
 			"Don't do that!", "Watch it!", "Take your time then.",
 			"Ah!", "Ouch!", "This piece of String is needlessly long! It's ridiculous!",
 			"Stop touching that!", "", "Lorde's album is pretty good.", "You should check it out.",
-			"...", "Did you see that ludicrous display last night?", "You'll break the screen doing that.",
+			"...", "You'll break the screen doing that.",
 			"A wild speech bubble appears!",
-			"Leeeeeeeeeeeeeeeeeeeennnnnnnnnnnnnggggggggggttttthhhhhhhhhhhhhhh Teeeeeessssssssstttttt!"};
+	"Leeeeeeeeeeeeeeee eeeennnnnnnnnn nnngggggggggg ttttthhhhhhhhh hhhhhh Teeeeeess sssssssttt ttt!"};
 
 	public SpeechBubbles(Game game) {
 		super(game);
@@ -54,8 +63,9 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 
 		stageui.act(delta);
 		stageui.draw();
-		
+
 		batchui.begin();
+		Assets.font24.drawMultiLine(batchui, "Free: " + speechBubblePool.getFree() + " |", 0, 48, width, HAlignment.RIGHT);
 		Assets.font24.drawMultiLine(batchui, testName, 0, 24, width, HAlignment.RIGHT);
 		batchui.end();
 	}
@@ -64,8 +74,10 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 
 		for (Actor sb : stage.getActors()){
 
-			if (sb instanceof SpeechBubble && ((SpeechBubble) sb).isDead())
+			if (sb instanceof SpeechBubble && !((SpeechBubble) sb).isAlive()){
 				stage.getActors().removeValue(sb, true);
+                speechBubblePool.free((SpeechBubble) sb);	
+			}
 
 		}
 	}
@@ -85,88 +97,37 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 		});		
 		stageui.addActor(backbutton);	
 
+		backbutton = new TextButton("Toggle Pics", skin);
+		backbutton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		backbutton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				usePics = !usePics;
+			}
+		});		
+		stageui.addActor(backbutton);
+	}	
+	
+	@Override
+	public void dispose(){
+		super.dispose();
+		skin.dispose();		
 	}
 
-	class SpeechBubble extends Actor{
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-		private NinePatch bubble;
-		private MyTimer life;
+		SpeechBubble sb = speechBubblePool.obtain();
+		
+		if (usePics)
+			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY, ImageCache.getTexture("background"));
+		else
+			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY);
+		
+		sb.setColor(new Color(MathUtils.random(0, 1f), MathUtils.random(0, 1f), MathUtils.random(0, 1f), 1f));
+		stage.addActor(sb);
 
-		boolean dead = false;
-
-		String text;
-		BitmapFont font = Assets.font24;
-
-		float padX = 10, padY = 35;
-
-		SpeechBubble(String text, float x, float y, float width, float height, float time){
-
-			this.text = text;			
-
-			float sbWidth = font.getBounds(text).width + padX*2, 
-					sbHeight = font.getBounds(text).height + padY*2;
-			
-			if (text == "" && sbWidth < 36)
-				sbWidth = 36;	
-			
-			setWidth(sbWidth);
-			setHeight(sbHeight);				
-			
-			setX(x);
-			setY(y);		
-			
-			/**
-			 * Keep in the screen
-			 */
-			
-			if (getX() + sbWidth > Gdx.app.getGraphics().getWidth())
-				setX(getX() - (sbWidth - (Gdx.app.getGraphics().getWidth() - getX())));
-			
-			if (getY() + sbHeight > Gdx.app.getGraphics().getHeight())
-				setY(getY() - (sbHeight - (Gdx.app.getGraphics().getHeight() - getY())));
-
-			bubble = ImageCache.CreatePatch("bubble");
-
-			life = new MyTimer(time) {
-
-				@Override
-				protected void perform() {
-					dead = true;
-
-				}
-			};
-			life.start();
-
-		}
-
-		public void setPadding(float padX, float padY){
-
-			this.padX = padX;
-			this.padY = padY;
-
-		}
-
-		public void setFont(BitmapFont font){
-			this.font = font;
-
-		}
-		public boolean isDead() {
-			return dead;
-		}
-
-		@Override		
-		public void draw(Batch batch, float parentAlpha){
-
-			bubble.draw(batch, getX(), getY(), getWidth(), getHeight());
-			font.drawMultiLine(batch, text, getX() + padX, getY() + getHeight() - padY, getWidth(), HAlignment.LEFT);
-		}
-
-		@Override
-		public void act(float delta){
-			super.act(delta);
-			life.update(delta);
-
-		}
+		return false;
 	}
 
 	@Override
@@ -184,15 +145,6 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 	@Override
 	public boolean keyTyped(char character) {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-		SpeechBubble sb = new SpeechBubble(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY, 100, 100, 2.5f);
-		stage.addActor(sb);
-
 		return false;
 	}
 

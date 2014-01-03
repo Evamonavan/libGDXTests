@@ -1,4 +1,4 @@
-package com.johnathongoss.libgdxtests.utils;
+package com.johnathongoss.libgdxtests.misc;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

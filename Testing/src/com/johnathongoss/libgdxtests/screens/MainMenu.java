@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.misc.Dice;
+import com.johnathongoss.libgdxtests.misc.Timers;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Box2D;
 import com.johnathongoss.libgdxtests.tests.Box2DTest;
@@ -15,8 +17,6 @@ import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
 import com.johnathongoss.libgdxtests.tests.Particles;
 import com.johnathongoss.libgdxtests.tests.SpeechBubbles;
-import com.johnathongoss.libgdxtests.utils.Dice;
-import com.johnathongoss.libgdxtests.utils.Timers;
 
 public class MainMenu extends BlankTestScreen {
 
@@ -24,7 +24,7 @@ public class MainMenu extends BlankTestScreen {
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.5 |");
+		Text.add("0.5.1 |");
 		Text.add("");
 		Text.add("johnathongoss.com |");
 	}
@@ -62,13 +62,13 @@ public class MainMenu extends BlankTestScreen {
 		 * To Utils
 		 */
 		
-		utilButton = new TextButton("Utils", skin);
+		utilButton = new TextButton("Misc", skin);
 		utilButton.setHeight(BUTTON_HEIGHT);
 		utilButton.setWidth(BUTTON_WIDTH);		
 		utilButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new Utils(game));
+				game.setScreen(new Misc(game));
 			}
 		});	
 		utilButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);

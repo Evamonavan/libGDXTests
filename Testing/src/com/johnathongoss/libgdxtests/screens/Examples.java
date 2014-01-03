@@ -7,14 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.johnathongoss.libgdx.examples.Conversation;
 import com.johnathongoss.libgdx.examples.FishTank;
 import com.johnathongoss.libgdx.examples.FishTankBox2D;
 import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.misc.Timers;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
-import com.johnathongoss.libgdxtests.utils.Timers;
 
 public class Examples extends BlankTestScreen {
 
@@ -86,6 +87,23 @@ public class Examples extends BlankTestScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new FishTank(game));
+			}
+		});		
+
+		buttons.add(debugButton);
+		
+		/*
+		 * Conversation
+		 */
+
+		debugButton = new TextButton("Conversation", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Conversation(game));
 			}
 		});		
 

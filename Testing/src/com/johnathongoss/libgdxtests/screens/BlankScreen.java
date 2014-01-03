@@ -79,7 +79,6 @@ public abstract class BlankScreen implements Screen{
 	public void dispose() {
 		stage.dispose();
 		stageui.dispose();
-		game.dispose();
 		batch.dispose();	
 		batchui.dispose();
 	}
@@ -105,7 +104,7 @@ public abstract class BlankScreen implements Screen{
 
 	@Override
 	public void hide() {
-
+		dispose();
 	}
 
 	@Override

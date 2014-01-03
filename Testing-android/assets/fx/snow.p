@@ -101,16 +101,25 @@ lowMax: 90.0
 highMin: 0.0
 highMax: 200.0
 relative: false
-scalingCount: 3
+scalingCount: 2
 scaling0: 1.0
 scaling1: 0.0
-scaling2: 0.0
-timelineCount: 3
+timelineCount: 2
 timeline0: 0.0
-timeline1: 0.48630136
-timeline2: 1.0
+timeline1: 1.0
 - Rotation - 
-active: false
+active: true
+lowMin: -180.0
+lowMax: 180.0
+highMin: -180.0
+highMax: 180.0
+relative: true
+scalingCount: 2
+scaling0: 0.0
+scaling1: 1.0
+timelineCount: 2
+timeline0: 0.0
+timeline1: 1.0
 - Wind - 
 active: false
 - Gravity - 
@@ -133,8 +142,8 @@ colorsCount: 6
 colors0: 0.6
 colors1: 1.0
 colors2: 1.0
-colors3: 0.6156863
-colors4: 0.7137255
+colors3: 0.68235296
+colors4: 0.8156863
 colors5: 1.0
 timelineCount: 2
 timeline0: 0.0
@@ -284,9 +293,9 @@ colorsCount: 6
 colors0: 0.38039216
 colors1: 0.6901961
 colors2: 1.0
-colors3: 0.37254903
-colors4: 0.40392157
-colors5: 0.6117647
+colors3: 0.67058825
+colors4: 0.78431374
+colors5: 1.0
 timelineCount: 2
 timeline0: 0.0
 timeline1: 1.0

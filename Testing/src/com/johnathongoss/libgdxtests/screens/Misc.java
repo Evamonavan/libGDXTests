@@ -11,19 +11,19 @@ import com.johnathongoss.libgdx.examples.FishTank;
 import com.johnathongoss.libgdx.examples.FishTankBox2D;
 import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.misc.Dice;
+import com.johnathongoss.libgdxtests.misc.Timers;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
-import com.johnathongoss.libgdxtests.utils.Dice;
-import com.johnathongoss.libgdxtests.utils.Timers;
 
-public class Utils extends BlankTestScreen {
+public class Misc extends BlankTestScreen {
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
-	public Utils(Game game) {
+	public Misc(Game game) {
 		super(game);				
-		Text.add("Utils |");
+		Text.add("Misc |");
 	}
 
 	@Override

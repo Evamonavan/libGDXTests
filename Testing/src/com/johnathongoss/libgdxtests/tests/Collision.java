@@ -260,8 +260,7 @@ public class Collision extends BlankTestScreen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
-		game.dispose();
+		super.dispose();
 		shapeRenderer.dispose();
 	}
 
