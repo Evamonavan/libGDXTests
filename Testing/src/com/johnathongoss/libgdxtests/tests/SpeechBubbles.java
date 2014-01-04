@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
@@ -25,7 +24,7 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
-	private String testName = "Speech Bubbles |";
+	private String testName = "Speech Bubbles Test |";
 	private boolean usePics = false;
 	
     // SpeechBubble pool.
@@ -39,7 +38,7 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 	private String texts[] = {"Did you see that ludicrous display last night?", "What did the apple say to the tree?",
 			"Don't do that!", "Watch it!", "Take your time then.",
 			"Ah!", "Ouch!", "This piece of String is needlessly long! It's ridiculous!",
-			"Stop touching that!", "", "Lorde's album is pretty good.", "You should check it out.",
+			"Stop touching that!", "", "You should check it out.",
 			"...", "You'll break the screen doing that.",
 			"A wild speech bubble appears!",
 	"Leeeeeeeeeeeeeeee eeeennnnnnnnnn nnngggggggggg ttttthhhhhhhhh hhhhhh Teeeeeess sssssssttt ttt!"};
@@ -63,7 +62,6 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 
 		stageui.act(delta);
 		stageui.draw();
-
 		batchui.begin();
 		Assets.font24.drawMultiLine(batchui, "Free: " + speechBubblePool.getFree() + " |", 0, 48, width, HAlignment.RIGHT);
 		Assets.font24.drawMultiLine(batchui, testName, 0, 24, width, HAlignment.RIGHT);
@@ -124,7 +122,7 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 		else
 			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY);
 		
-		sb.setColor(new Color(MathUtils.random(0, 1f), MathUtils.random(0, 1f), MathUtils.random(0, 1f), 1f));
+		sb.setColor(new Color(MathUtils.random(0, 1f), MathUtils.random(0, 1f), MathUtils.random(0, 1f),  MathUtils.random(1f, 1f)));
 		stage.addActor(sb);
 
 		return false;

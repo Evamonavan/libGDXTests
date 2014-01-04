@@ -20,8 +20,8 @@ public class SpeechBubble extends Actor implements Poolable{
 	private Sprite pic;
 	private NinePatch bubble;
 	private MyTimer life;
-
-	boolean alive = false;
+	private Actor followed;
+	boolean alive = false, follow = false;
 
 	String text;
 	BitmapFont font = Assets.font24;
@@ -35,8 +35,7 @@ public class SpeechBubble extends Actor implements Poolable{
 
 	public SpeechBubble(){
 
-		bubble = ImageCache.CreatePatch("bubble");
-		alive = false;
+		bubble = ImageCache.CreatePatch("bubble");		
 	}
 
 	public void init(String text, float x, float y){
@@ -56,8 +55,8 @@ public class SpeechBubble extends Actor implements Poolable{
 		float sbWidth = font.getBounds(text).width + padX*2, 
 				sbHeight = font.getBounds(text).height + padY*2;
 
-		if (text == "" && sbWidth < 36)
-			sbWidth = 36;				
+		if (sbWidth < 50)
+			sbWidth = 50;				
 
 		yStretch = (float) Math.ceil(0.5f+(sbWidth/((float)Gdx.app.getGraphics().getWidth()/2f)));
 
@@ -65,7 +64,7 @@ public class SpeechBubble extends Actor implements Poolable{
 			sbWidth =  Gdx.app.getGraphics().getWidth()/2 + padX*2;
 			sbHeight = font.getBounds(text).height*yStretch + padY*yStretch;
 		}
-
+		
 		setWidth(sbWidth);
 		setHeight(sbHeight);			
 		
@@ -73,7 +72,7 @@ public class SpeechBubble extends Actor implements Poolable{
 
 		setOrigin(getWidth()/2, getHeight()/2);
 
-		setX(x);
+		setX(x - getWidth()/2);
 		setY(y);		
 
 		setLife(0.6f + (float)text.length()*speed);			
@@ -81,6 +80,11 @@ public class SpeechBubble extends Actor implements Poolable{
 
 	private void checkBounds() {
 
+		if (follow){
+			setX(followed.getX() - getWidth()/2);
+			setY(followed.getY() + followed.getHeight());			
+		}
+		
 		if (getX() + getWidth() > Gdx.app.getGraphics().getWidth())
 			setX(getX() - (getWidth() - (Gdx.app.getGraphics().getWidth() - getX())));
 
@@ -104,13 +108,14 @@ public class SpeechBubble extends Actor implements Poolable{
 
 			}
 		};
+		life.reset();
 		life.start();
 	}
 
 	@Override
 	public void setColor(Color color){
 		bubble.setColor(color);
-
+		
 	}
 
 	public void setPadding(float padX, float padY){
@@ -127,10 +132,9 @@ public class SpeechBubble extends Actor implements Poolable{
 	public boolean isAlive() {
 		return alive;
 	}
-
 	@Override		
-	public void draw(Batch batch, float parentAlpha){
-
+	public void draw(Batch batch, float parentAlpha){	
+		
 		bubble.draw(batch, getX(), getY(), getWidth(), getHeight());
 
 		if (!usePic){
@@ -140,7 +144,7 @@ public class SpeechBubble extends Actor implements Poolable{
 					getX() + padX, getY() + getHeight() - padY, wrapWidth);
 		}
 		else{
-			batch.draw(pic, getX() + 10, getY() + 10 + picOffset, pic.getWidth(), pic.getHeight());
+			batch.draw(pic, getX() + padX, getY() + picOffset, pic.getWidth(), pic.getHeight());
 			font.drawWrapped(batch,
 					text,
 					getX() + padX*2 + pic.getWidth(), getY() + getHeight() - padY, wrapWidth);
@@ -165,7 +169,7 @@ public class SpeechBubble extends Actor implements Poolable{
 		if (getHeight() < 100)
 			setHeight(100);		
 		
-		picOffset = getHeight() - 100;
+		picOffset = getHeight() - 80 - padX;
 		
 		setWidth(getWidth() + pic.getWidth() + padX);	
 		
@@ -187,5 +191,14 @@ public class SpeechBubble extends Actor implements Poolable{
 		wrapWidth = 0;
 		text = "";
 		usePic = false;
+		life.reset();
+		life.pause();
+		follow = false;
+		followed = null;
+	}
+
+	public void setFollow(Actor actor) {
+		follow = true;		
+		followed = actor;		
 	}
 }

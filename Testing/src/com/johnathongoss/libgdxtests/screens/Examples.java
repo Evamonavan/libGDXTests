@@ -7,15 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdx.examples.Conversation;
+import com.johnathongoss.libgdx.examples.Talking;
 import com.johnathongoss.libgdx.examples.FishTank;
-import com.johnathongoss.libgdx.examples.FishTankBox2D;
 import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
-import com.johnathongoss.libgdxtests.misc.Timers;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
-import com.johnathongoss.libgdxtests.tests.Camera2D;
-import com.johnathongoss.libgdxtests.tests.Collision;
 
 public class Examples extends BlankTestScreen {
 
@@ -27,7 +23,7 @@ public class Examples extends BlankTestScreen {
 	}
 
 	@Override
-	public void render(float delta) {	
+	public void render(float delta) {			
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);			
 		stage.act(delta);
 		stage.draw();	
@@ -36,12 +32,12 @@ public class Examples extends BlankTestScreen {
 		stageui.draw();	
 		
 		renderText();		
+		
 	}	
 
 	@Override
 	public void show(){
 		addInput();
-
 		backButton = new TextButton("Main Menu", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
@@ -96,14 +92,14 @@ public class Examples extends BlankTestScreen {
 		 * Conversation
 		 */
 
-		debugButton = new TextButton("Conversation", skin);
+		debugButton = new TextButton("Talking", skin);
 		debugButton.setHeight(BUTTON_HEIGHT);
 		debugButton.setWidth(BUTTON_WIDTH);
 
 		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new Conversation(game));
+				game.setScreen(new Talking(game));
 			}
 		});		
 

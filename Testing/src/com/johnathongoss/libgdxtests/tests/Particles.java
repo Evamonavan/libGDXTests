@@ -28,7 +28,7 @@ public class Particles extends BlankTestScreen {
 		super(game);	
 
 		inputProcessor = new MyInputProcessor();
-		testName = "Particles |";
+		testName = "Particles Test |";
 	}
 
 	@Override

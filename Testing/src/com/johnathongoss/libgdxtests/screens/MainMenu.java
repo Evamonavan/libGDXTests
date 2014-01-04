@@ -8,8 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
-import com.johnathongoss.libgdxtests.misc.Dice;
-import com.johnathongoss.libgdxtests.misc.Timers;
+import com.johnathongoss.libgdxtests.tests.AnimationTest;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Box2D;
 import com.johnathongoss.libgdxtests.tests.Box2DTest;
@@ -20,17 +19,19 @@ import com.johnathongoss.libgdxtests.tests.SpeechBubbles;
 
 public class MainMenu extends BlankTestScreen {
 
-	TextButton exampleButton, utilButton;
+	TextButton exampleButton, miscButton;
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.5.1 |");
+		Text.add("0.6 |");
 		Text.add("");
 		Text.add("johnathongoss.com |");
+		
+		
 	}
 	
 	@Override
-	public void render(float delta) {	
+	public void render(float delta) {			
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);			
 		stage.act(delta);
 		stage.draw();	
@@ -62,17 +63,34 @@ public class MainMenu extends BlankTestScreen {
 		 * To Utils
 		 */
 		
-		utilButton = new TextButton("Misc", skin);
-		utilButton.setHeight(BUTTON_HEIGHT);
-		utilButton.setWidth(BUTTON_WIDTH);		
-		utilButton.addListener(new ClickListener() {
+		miscButton = new TextButton("Misc", skin);
+		miscButton.setHeight(BUTTON_HEIGHT);
+		miscButton.setWidth(BUTTON_WIDTH);		
+		miscButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Misc(game));
 			}
 		});	
-		utilButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
-		stageui.addActor(utilButton);
+		miscButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
+		stageui.addActor(miscButton);
+		
+		/*
+		 * Animation
+		 */
+		
+		debugButton = new TextButton("Animation", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+		
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new AnimationTest(game));
+			}
+		});		
+		
+		buttons.add(debugButton);	
 		
 		/*
 		 * Box 2D Test
@@ -89,24 +107,7 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});		
 		
-		buttons.add(debugButton);
-		
-		/*
-		 * Box 2D Test2
-		 */
-		
-		debugButton = new TextButton("Box2D", skin);
-		debugButton.setHeight(BUTTON_HEIGHT);
-		debugButton.setWidth(BUTTON_WIDTH);
-		
-		debugButton.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new Box2DTest(game));
-			}
-		});		
-		
-		//buttons.add(tempButton);
+		buttons.add(debugButton);		
 		
 		/*
 		 * Camera 2D Test
@@ -142,7 +143,7 @@ public class MainMenu extends BlankTestScreen {
 		});		
 		
 		buttons.add(debugButton);		
-			
+		
 		/*
 		 * Particles
 		 */
@@ -159,7 +160,7 @@ public class MainMenu extends BlankTestScreen {
 		});		
 		
 		buttons.add(debugButton);
-		
+			
 		/*
 		 * Speech bubbles
 		 */
@@ -175,7 +176,7 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});		
 		
-		buttons.add(debugButton);	
+		buttons.add(debugButton);		
 		
 		for (TextButton button : buttons){			
 			stageui.addActor(button);			
@@ -209,7 +210,7 @@ public class MainMenu extends BlankTestScreen {
 
 	@Override
 	protected void updateText() {
-		// TODO Auto-generated method stub
+		// TODO Remove extend from BlankScreenTest
 		
 	}	
 

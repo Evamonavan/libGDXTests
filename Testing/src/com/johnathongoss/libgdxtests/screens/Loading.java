@@ -22,7 +22,7 @@ public class Loading implements Screen {
 
 	public Loading(Game game) {
 		this.game = game;
-
+		
 		batch = new SpriteBatch();
 
 		camera = new OrthographicCamera();
@@ -35,7 +35,8 @@ public class Loading implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+	//	Gdx.gl.glClearColor(.356f, .607f, .819f, 1f);
+		Gdx.gl.glClearColor(.1f, .1f, .1f, 1f);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);		
 		
 		batch.begin();
