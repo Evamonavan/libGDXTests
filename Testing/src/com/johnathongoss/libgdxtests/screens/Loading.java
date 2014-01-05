@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.ParticleEffectsCache;
@@ -31,12 +32,13 @@ public class Loading implements Screen {
 		Assets.Load();
 		ImageCache.load();
 		ParticleEffectsCache.Load();
+		AppData.Prefs.Load();
 	}
 	
 	@Override
 	public void render(float delta) {
 	//	Gdx.gl.glClearColor(.356f, .607f, .819f, 1f);
-		Gdx.gl.glClearColor(.1f, .1f, .1f, 1f);
+		Gdx.gl.glClearColor(AppData.Prefs.getBackgroundR(), AppData.Prefs.getBackgroundG(), AppData.Prefs.getBackgroundB(), 1f);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);		
 		
 		batch.begin();

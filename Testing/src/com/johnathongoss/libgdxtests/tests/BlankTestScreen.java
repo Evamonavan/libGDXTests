@@ -48,7 +48,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 		showBackButton = true;
 
 		if (showBackButton){
-			backButton = new TextButton("Main Menu", skin);
+			backButton = new TextButton("Back", skin);
 			backButton.setHeight(BUTTON_HEIGHT);
 			backButton.setWidth(BUTTON_WIDTH);
 			backButton.setPosition(0, height - BUTTON_HEIGHT);

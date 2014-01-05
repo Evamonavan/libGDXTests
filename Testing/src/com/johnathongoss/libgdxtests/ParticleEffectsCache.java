@@ -7,21 +7,24 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
 public class ParticleEffectsCache {
 
-	public static final int FIRE = 0, SNOW = 1, BLOOD = 2, BUBBLES = 3, EXPL_FIRE = 4;
+	public static final int FIRE = 0, SNOW = 1, BLOOD = 2, BUBBLES = 3, EXPL_FIRE = 4,
+			FIREWORK_LARGE = 5;
 
 	private static ParticleEffectPool 
 	pool_fire, 
 	pool_snow, 
 	pool_blood, 
 	pool_bubbles,
-	pool_expl_fire;
+	pool_expl_fire,
+	pool_firework_large;
 
 	private static ParticleEffect 	
 	fx_fire, 
 	fx_snow, 
 	fx_blood, 
 	fx_bubbles,
-	fx_expl_fire;
+	fx_expl_fire,
+	fx_firework_large;
 
 	public static void Load(){
 
@@ -44,6 +47,10 @@ public class ParticleEffectsCache {
 		fx_expl_fire = new ParticleEffect();
 		fx_expl_fire.load(Gdx.files.internal("fx/explosion_fire.p"), Gdx.files.internal("fx"));			
 		pool_expl_fire = new ParticleEffectPool(fx_expl_fire, 0, 150);
+		
+		fx_firework_large = new ParticleEffect();
+		fx_firework_large.load(Gdx.files.internal("fx/firework_large.p"), Gdx.files.internal("fx"));			
+		pool_firework_large = new ParticleEffectPool(fx_firework_large, 0, 150);
 	}
 
 	static PooledEffect effect;
@@ -68,6 +75,10 @@ public class ParticleEffectsCache {
 		}
 		case EXPL_FIRE: {
 			effect = pool_expl_fire.obtain();			
+			break;
+		}
+		case FIREWORK_LARGE: {
+			effect = pool_firework_large.obtain();			
 			break;
 		}
 

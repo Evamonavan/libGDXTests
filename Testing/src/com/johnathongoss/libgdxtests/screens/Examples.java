@@ -1,6 +1,9 @@
 package com.johnathongoss.libgdxtests.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,13 +16,14 @@ import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 
-public class Examples extends BlankTestScreen {
+public class Examples extends BlankTestScreen implements InputProcessor{
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
 	public Examples(Game game) {
 		super(game);				
 		Text.add("Examples |");
+		Text.add("screens that show a blend of tests together |");
 	}
 
 	@Override
@@ -30,15 +34,18 @@ public class Examples extends BlankTestScreen {
 
 		stageui.act(delta);
 		stageui.draw();	
-		
+
 		renderText();		
-		
+
 	}	
 
 	@Override
 	public void show(){
-		addInput();
-		backButton = new TextButton("Main Menu", skin);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
+
+		backButton = new TextButton("Back", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
 		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
@@ -87,7 +94,7 @@ public class Examples extends BlankTestScreen {
 		});		
 
 		buttons.add(debugButton);
-		
+
 		/*
 		 * Conversation
 		 */
@@ -138,6 +145,56 @@ public class Examples extends BlankTestScreen {
 	protected void updateText() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		if(keycode == Keys.BACK){
+			game.setScreen(new MainMenu(game));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 
 }

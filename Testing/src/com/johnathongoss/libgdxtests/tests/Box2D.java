@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -36,6 +37,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Box2D extends BlankTestScreen implements GestureListener, InputProcessor{
 
@@ -75,8 +77,11 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 
 		bodies = new Array<Body>();
 		addBackButton();         
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, new GestureDetector(this), this);
-		Gdx.input.setInputProcessor(im);
+		
+		InputMultiplexer im = new InputMultiplexer(stageui, stage,new GestureDetector(this),  this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
+		
 		sprite = new Sprite(circle);
 
 		batch = new SpriteBatch();
@@ -263,16 +268,6 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 	protected Sprite sprite;
 	@Override  
 	public void render(float delta) {    
-
-		//		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);  
-		//		 
-		//		world.step(BOX_STEP, BOX_VELOCITY_ITERATIONS, BOX_POSITION_ITERATIONS);  		
-		//		debugRenderer.render(world, cam.combined); 
-		//		
-		//		batch.begin();
-		//		Box2DSprite.draw(batch, world);	c			
-		//		batch.end();
-		//		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		world.getBodies(bodies);
 		batch.begin();
@@ -441,7 +436,9 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
+		if(keycode == Keys.BACK){
+			game.setScreen(new MainMenu(game));
+		}
 		return false;
 	}
 

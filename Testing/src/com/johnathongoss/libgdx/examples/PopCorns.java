@@ -2,6 +2,9 @@ package com.johnathongoss.libgdx.examples;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -19,10 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.screens.Examples;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.utils.MyTimer;
 
-public class PopCorns extends BlankTestScreen{	
+public class PopCorns extends BlankTestScreen implements InputProcessor{	
 
 	public PopCorns(Game game) {
 		super(game);
@@ -38,6 +42,10 @@ public class PopCorns extends BlankTestScreen{
 
 	@Override
 	public void show(){
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
+		
 		shapeRenderer = new ShapeRenderer();
 		timer = new MyTimer(MathUtils.random(2f, 6f)) {
 
@@ -56,10 +64,10 @@ public class PopCorns extends BlankTestScreen{
 		numBalls = 50;
 		testName = "Pop Corn Example |";
 		
-		backButton = new TextButton("Examples", skin);
+		backButton = new TextButton("Back", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.setPosition(0, height - BUTTON_HEIGHT);
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -313,5 +321,55 @@ public class PopCorns extends BlankTestScreen{
 			setScale(1f);
 
 		}
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		if(keycode == Keys.BACK){
+			game.setScreen(new Examples(game));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

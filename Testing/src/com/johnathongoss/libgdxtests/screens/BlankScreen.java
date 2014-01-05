@@ -3,6 +3,7 @@ package com.johnathongoss.libgdxtests.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public abstract class BlankScreen implements Screen{
+public abstract class BlankScreen implements Screen, InputProcessor{
 
 	protected Stage stage, stageui;
 	protected SpriteBatch batch, batchui; // batchui is not affected by camera control
@@ -119,12 +120,13 @@ public abstract class BlankScreen implements Screen{
 
 	protected void addCameraControl(float x1, float x2, float y1, float y2){
 		controller = new CameraController();
+		controller.setBounds(x1, x2, y1, y2);
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, controller);
 
 		InputMultiplexer im = new InputMultiplexer(stageui, stage, gestureDetector);
 		Gdx.input.setInputProcessor(im);
 
-		controller.setBounds(x1, x2, y1, y2);
+		
 
 	}
 
@@ -134,6 +136,10 @@ public abstract class BlankScreen implements Screen{
 		float initialScale = 1;
 
 		float boundX = width*cam.zoom/2, boundX2 = 0, boundY = 0, boundY2 = height;
+
+		public CameraController() {
+			// TODO Auto-generated constructor stub
+		}
 
 		public void updateBounds(){
 			//default bounds

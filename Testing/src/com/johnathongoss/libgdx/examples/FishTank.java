@@ -3,7 +3,9 @@ package com.johnathongoss.libgdx.examples;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,9 +29,10 @@ import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.ParticleEffectsCache;
 import com.johnathongoss.libgdxtests.screens.Examples;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.utils.MyTimer;
 
-public class FishTank implements Screen {
+public class FishTank implements Screen, InputProcessor {
 	
 	/*
 	 * Essentials
@@ -161,8 +164,9 @@ public class FishTank implements Screen {
 		cam.update();   
 		stage.setCamera(cam);
 
-		InputMultiplexer im = new InputMultiplexer(stageui, stage);
-		Gdx.input.setInputProcessor(im);	
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);	
 
 		Effects = new Array<PooledEffect>();
 		cam.zoom = 1.4f;
@@ -172,10 +176,10 @@ public class FishTank implements Screen {
 		conservedEnergy = 0.5f;
 		viscosity = 0.99f;
 
-		backButton = new TextButton("Examples", skin);
+		backButton = new TextButton("Back", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.setPosition(0, height - BUTTON_HEIGHT);
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -429,7 +433,7 @@ public class FishTank implements Screen {
 		batch.setProjectionMatrix(cam.combined);
 		stage.setViewport(width, height, false);
 		stageui.setViewport(width, height, false);
-		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.setPosition(0, height - BUTTON_HEIGHT);
 	}
 
 	@Override
@@ -448,6 +452,58 @@ public class FishTank implements Screen {
 		stage.dispose();
 		stageui.dispose();
 		game.dispose();		
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		
+		if(keycode == Keys.BACK){
+			game.setScreen(new Examples(game));
+		}
+		
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

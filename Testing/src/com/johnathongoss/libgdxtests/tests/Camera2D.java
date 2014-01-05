@@ -2,10 +2,13 @@ package com.johnathongoss.libgdxtests.tests;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -13,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Camera2D extends BlankTestScreen{	
 	protected TextureRegion background = ImageCache.getTexture("background");
@@ -90,6 +94,13 @@ public class Camera2D extends BlankTestScreen{
 		testName = "Camera 2D Test |";
 		addCameraControl(width, 0, height, 0);
 		addBackButton();
+		controller = new CameraController();
+		controller.setBounds(width, 0, height, 0);
+		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, controller);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, gestureDetector, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
+		
 		cam.zoom = 1.4f;
 		camX = cam.position.x;
 		camY = cam.position.y;
@@ -117,6 +128,56 @@ public class Camera2D extends BlankTestScreen{
 		for (TextButton button : buttons)
 			stageui.addActor(button);			
 
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		if(keycode == Keys.BACK){
+			game.setScreen(new MainMenu(game));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 
 }

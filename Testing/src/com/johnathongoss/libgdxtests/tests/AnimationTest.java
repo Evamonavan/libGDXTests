@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -51,6 +52,9 @@ public class AnimationTest implements Screen, InputProcessor{
 		man.act(delta);
 		man.draw(batch, 1f);
 		Assets.font24.drawMultiLine(batch, testName, 0, 24, Gdx.app.getGraphics().getWidth(), HAlignment.RIGHT);
+		Assets.font24.setColor(1, 1, 1, 0.8f);
+		Assets.font24.drawMultiLine(batch, "FPS: " + Gdx.app.getGraphics().getFramesPerSecond(), 0, 24, Gdx.app.getGraphics().getWidth(), HAlignment.LEFT);
+		Assets.font24.setColor(1, 1, 1, 1f);
 		batch.end();
 
 		stageui.act(delta);
@@ -78,10 +82,11 @@ public class AnimationTest implements Screen, InputProcessor{
 		man = new Walker("man");
 		man.setPosition(new Vector2(Gdx.app.getGraphics().getWidth()/2, Gdx.app.getGraphics().getHeight()/2));
 		
-		InputMultiplexer multiplexer = new InputMultiplexer(stageui, stage, this);
-		Gdx.input.setInputProcessor(multiplexer);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
 
-		TextButton button = new TextButton("Main Menu", Assets.skin);
+		TextButton button = new TextButton("Back", Assets.skin);
 		button.setWidth(Gdx.app.getGraphics().getWidth()/7);
 		button.setHeight(Gdx.app.getGraphics().getHeight()/8);				
 		button.addListener(new ClickListener() {
@@ -124,7 +129,9 @@ public class AnimationTest implements Screen, InputProcessor{
 
 	@Override
 	public boolean keyUp(int keycode) {
-
+		if(keycode == Keys.BACK){
+			game.setScreen(new MainMenu(game));
+		}
 		return false;
 	}
 

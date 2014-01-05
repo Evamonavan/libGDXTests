@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -89,13 +90,14 @@ public class Talking implements Screen, InputProcessor{
 	@Override
 	public void show() {
 
-		InputMultiplexer multiplexer = new InputMultiplexer(stageui, stage, this);
-		Gdx.input.setInputProcessor(multiplexer);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);
 
-		backButton = new TextButton("Examples", skin);
+		backButton = new TextButton("Back", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.setPosition(0, height - BUTTON_HEIGHT);
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -257,7 +259,7 @@ public class Talking implements Screen, InputProcessor{
 		BUTTON_WIDTH = width/7;
 		BUTTON_HEIGHT = height/8;	
 
-		backButton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		backButton.setBounds(0, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
 		stage.setViewport(width, height, true);
 	}	
 
@@ -452,6 +454,10 @@ public class Talking implements Screen, InputProcessor{
 
 	@Override
 	public boolean keyUp(int keycode) {
+		if(keycode == Keys.BACK){
+			game.setScreen(new Examples(game));
+		}
+		
 		return false;
 	}
 

@@ -199,6 +199,7 @@ public class SpeechBubble extends Actor implements Poolable{
 
 	public void setFollow(Actor actor) {
 		follow = true;		
-		followed = actor;		
+		followed = actor;	
+		checkBounds();
 	}
 }

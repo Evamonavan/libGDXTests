@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.tests.AnimationTest;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
@@ -23,8 +24,8 @@ public class MainMenu extends BlankTestScreen {
 	private Array<TextButton> buttons;
 	public MainMenu(Game game) {
 		super(game);				
-		Text.add("0.6 |");
-		Text.add("");
+		Text.add("libGDX Tests |");
+		Text.add("0.6.1 |");
 		Text.add("johnathongoss.com |");
 		
 		
@@ -45,6 +46,8 @@ public class MainMenu extends BlankTestScreen {
 	@Override
 	public void show(){
 		Gdx.input.setInputProcessor(stageui);
+		Gdx.input.setCatchBackKey(false);
+		
 		buttons = new Array<TextButton>();
 		
 		exampleButton = new TextButton("Examples", skin);
@@ -53,7 +56,7 @@ public class MainMenu extends BlankTestScreen {
 		exampleButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new Examples(game));
+				game.setScreen(new Examples(game));				
 			}
 		});	
 		exampleButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
@@ -73,6 +76,22 @@ public class MainMenu extends BlankTestScreen {
 			}
 		});	
 		miscButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
+		stageui.addActor(miscButton);
+		
+		/**
+		 * To Options
+		 */
+		
+		miscButton = new TextButton("Options", skin);
+		miscButton.setHeight(BUTTON_HEIGHT);
+		miscButton.setWidth(BUTTON_WIDTH);		
+		miscButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new OptionsScreen(game));
+			}
+		});	
+		miscButton.setPosition(width - BUTTON_WIDTH, 0);
 		stageui.addActor(miscButton);
 		
 		/*
@@ -204,7 +223,7 @@ public class MainMenu extends BlankTestScreen {
 		
 		batchui.begin();
 		for (int i = 0; i < Text.size; i++)
-			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, Text.size*24 - i*24, width, HAlignment.RIGHT);
+			Assets.font24.drawMultiLine(batchui, Text.get(i), -BUTTON_WIDTH, Text.size*24 - i*24, width, HAlignment.RIGHT);
 		batchui.end();
 	}
 
@@ -212,6 +231,54 @@ public class MainMenu extends BlankTestScreen {
 	protected void updateText() {
 		// TODO Remove extend from BlankScreenTest
 		
+	}
+
+	@Override
+	public boolean keyDown(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int screenX, int screenY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
 	}	
 
 }
