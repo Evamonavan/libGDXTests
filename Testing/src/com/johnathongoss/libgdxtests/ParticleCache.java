@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 
-public class ParticleEffectsCache {
+public class ParticleCache {
 
 	public static final int FIRE = 0, SNOW = 1, BLOOD = 2, BUBBLES = 3, EXPL_FIRE = 4,
 			FIREWORK_LARGE = 5;

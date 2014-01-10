@@ -1,8 +1,7 @@
 package com.johnathongoss.libgdxtests.screens;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
@@ -10,17 +9,19 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdx.examples.Talking;
-import com.johnathongoss.libgdx.examples.FishTank;
-import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.examples.FishTank;
+import com.johnathongoss.libgdxtests.examples.PopCorns;
+import com.johnathongoss.libgdxtests.examples.Talking;
+import com.johnathongoss.libgdxtests.examples.Volunteer;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 
 public class Examples extends BlankTestScreen implements InputProcessor{
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
-	public Examples(Game game) {
+	public Examples(MyGame game) {
 		super(game);				
 		Text.add("Examples |");
 		Text.add("screens that show a blend of tests together |");
@@ -110,6 +111,23 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 			}
 		});		
 
+		buttons.add(debugButton);
+		
+		/*
+		 * Volunteer
+		 */
+		
+		debugButton = new TextButton("Volunteer", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+		
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new Volunteer(game));
+			}
+		});		
+		
 		buttons.add(debugButton);
 
 		for (TextButton button : buttons){			

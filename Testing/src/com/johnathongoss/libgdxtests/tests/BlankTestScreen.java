@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.screens.BlankScreen;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
@@ -24,7 +25,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 	protected Array<TextButton> buttons = new Array<TextButton>();
 	protected String testName = "";
 
-	public BlankTestScreen(final Game game) {
+	public BlankTestScreen(final MyGame game) {
 		super(game);
 
 		Text = new Array<String>();

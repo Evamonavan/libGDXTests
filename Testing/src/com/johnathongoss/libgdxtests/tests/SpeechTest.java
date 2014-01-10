@@ -1,10 +1,9 @@
 package com.johnathongoss.libgdxtests.tests;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
@@ -17,18 +16,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.entities.SpeechBubble;
 import com.johnathongoss.libgdxtests.screens.BlankScreen;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
-import com.johnathongoss.libgdxtests.utils.SpeechBubble;
 
-public class SpeechBubbles extends BlankScreen implements InputProcessor{
+public class SpeechTest extends BlankScreen implements InputProcessor{
 
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
-	private String testName = "Speech Bubbles Test |";
+	private String testName = "Text Test |";
 	private boolean usePics = false;
 	
-    // SpeechBubble pool.
     private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
         @Override
         protected SpeechBubble newObject() {
@@ -44,7 +43,7 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 			"A wild speech bubble appears!",
 	"Leeeeeeeeeeeeeeee eeeennnnnnnnnn nnngggggggggg ttttthhhhhhhhh hhhhhh Teeeeeess sssssssttt ttt!"};
 
-	public SpeechBubbles(Game game) {
+	public SpeechTest(MyGame game) {
 		super(game);
 
 		width = Gdx.app.getGraphics().getWidth();
@@ -80,7 +79,6 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 				stage.getActors().removeValue(sb, true);
                 speechBubblePool.free((SpeechBubble) sb);	
 			}
-
 		}
 	}
 
@@ -100,15 +98,16 @@ public class SpeechBubbles extends BlankScreen implements InputProcessor{
 		});		
 		stageui.addActor(backbutton);	
 
-		backbutton = new TextButton("Toggle Pics", skin);
-		backbutton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-		backbutton.addListener(new ClickListener() {
+		final TextButton picbutton = new TextButton("Pics: " + usePics, skin);
+		picbutton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		picbutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				usePics = !usePics;
+				picbutton.setText("Pics: " + usePics);
 			}
 		});		
-		stageui.addActor(backbutton);
+		stageui.addActor(picbutton);
 	}	
 	
 	@Override

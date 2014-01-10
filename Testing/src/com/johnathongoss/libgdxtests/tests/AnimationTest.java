@@ -1,21 +1,17 @@
 package com.johnathongoss.libgdxtests.tests;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -25,11 +21,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class AnimationTest implements Screen, InputProcessor{
 
-	Game game;
+	MyGame game;
 	private String testName = "Animation Test |";
 
 	SpriteBatch batch;
@@ -37,7 +34,7 @@ public class AnimationTest implements Screen, InputProcessor{
 	OrthographicCamera cam;
 	Walker man;
 
-	public AnimationTest(Game game) {
+	public AnimationTest(MyGame game) {
 		this.game = game;
 	}
 
@@ -118,7 +115,9 @@ public class AnimationTest implements Screen, InputProcessor{
 
 	@Override
 	public void dispose() {
-		// TODO dispose of stuff
+		batch.dispose();
+		stage.dispose();
+		stageui.dispose();
 	}
 
 	@Override
@@ -129,7 +128,9 @@ public class AnimationTest implements Screen, InputProcessor{
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if(keycode == Keys.BACK){
+		if(keycode == Keys.BACK || 
+				keycode == Keys.BACKSPACE ||
+				keycode == Keys.ESCAPE){
 			game.setScreen(new MainMenu(game));
 		}
 		return false;

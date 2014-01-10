@@ -1,13 +1,10 @@
 package com.johnathongoss.libgdxtests.tests;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
-import com.johnathongoss.libgdxtests.ParticleEffectsCache;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.ParticleCache;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Particles extends BlankTestScreen {
@@ -28,7 +26,7 @@ public class Particles extends BlankTestScreen {
 	private TextButton limitButton;
 	private boolean limitReached = false;
 
-	public Particles(Game game) {
+	public Particles(MyGame game) {
 		super(game);	
 
 		testName = "Particles Test |";
@@ -121,11 +119,10 @@ public class Particles extends BlankTestScreen {
 	}
 
 	protected void clearParticles() {
-		for (PooledEffect effect : Effects){			
-			Effects.clear();
+		Effects.clear();
+		for (PooledEffect effect : Effects){				
 			effect.reset();
-			effect.free();					
-
+			effect.free();	
 		}		
 	}
 
@@ -154,14 +151,14 @@ public class Particles extends BlankTestScreen {
 		}
 		else{
 			if (!continuous){
-				Effects.add(ParticleEffectsCache.getParticleEffect(index));
+				Effects.add(ParticleCache.getParticleEffect(index));
 
 				for (int i = 0; i < Effects.get(Effects.size - 1).getEmitters().size; i++){
 					Effects.get(Effects.size - 1).getEmitters().get(i).setContinuous(false);
 				}
 			}
 			else if (continuous){
-				Effects.add(ParticleEffectsCache.getParticleEffect(index));
+				Effects.add(ParticleCache.getParticleEffect(index));
 				for (int i = 0; i < Effects.get(Effects.size - 1).getEmitters().size; i++){
 					Effects.get(Effects.size - 1).getEmitters().get(i).setContinuous(true);
 

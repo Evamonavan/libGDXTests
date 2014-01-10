@@ -1,12 +1,10 @@
 package com.johnathongoss.libgdxtests.tests;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,8 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdx.examples.FishTank.Fish;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Collision extends BlankTestScreen {
@@ -45,7 +43,7 @@ public class Collision extends BlankTestScreen {
 	protected int cEnergyPointer = 0;
 	protected int numBalls = 16;
 
-	public Collision(Game game) {
+	public Collision(MyGame game) {
 		super(game);
 		shapeRenderer = new ShapeRenderer();
 	}

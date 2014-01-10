@@ -3,7 +3,7 @@ package com.johnathongoss.libgdxtests;
 import com.badlogic.gdx.Game;
 import com.johnathongoss.libgdxtests.screens.Loading;
 
-public class Testing extends Game {
+public class Testing extends MyGame {
 		
 	@Override
 	public void create() {		

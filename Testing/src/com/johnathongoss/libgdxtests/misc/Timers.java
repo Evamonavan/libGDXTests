@@ -1,25 +1,24 @@
 package com.johnathongoss.libgdxtests.misc;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.johnathongoss.libgdxtests.Assets;
-import com.johnathongoss.libgdxtests.screens.MainMenu;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.entities.MyTimer;
 import com.johnathongoss.libgdxtests.screens.Misc;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
-import com.johnathongoss.libgdxtests.utils.MyTimer;
 
 public class Timers extends BlankTestScreen{
 
 	MyTimer timer;
 	int count = 0;
-	public Timers(Game game) {
+	public Timers(MyGame game) {
 		super(game);
 		
 		testName = "Timers Test |";

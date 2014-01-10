@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 import com.johnathongoss.libgdxtests.screens.Misc;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
@@ -23,7 +24,7 @@ public class Dice extends BlankTestScreen{
 	
 	int noDice = 1, diceLower = 1, diceUpper = 6;
 	String result = "";
-	public Dice(Game game) {
+	public Dice(MyGame game) {
 		super(game);
 		// TODO Auto-generated constructor stub
 	}

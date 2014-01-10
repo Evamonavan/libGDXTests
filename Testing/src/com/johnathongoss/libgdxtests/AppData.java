@@ -9,12 +9,16 @@ public class AppData {
 		private static Preferences prefs;
 
 		private static String 	limitParticles = "limPart",
+				enableSound = "enSound",
 				backgroundR = "b_r",
 				backgroundG = "b_g",
 				backgroundB = "b_b";
 
 		public static boolean isLimitParticles(){
 			return prefs.getBoolean(limitParticles, true);			
+		}
+		public static boolean isEnableSound(){
+			return prefs.getBoolean(enableSound, true);			
 		}
 		public static float getBackgroundR() {
 
@@ -32,7 +36,10 @@ public class AppData {
 
 		public static void setLimitParticles(boolean limit){
 			prefs.putBoolean(limitParticles, limit);
-		}		
+		}	
+		public static void setEnableSound(boolean limit){
+			prefs.putBoolean(enableSound, limit);
+		}	
 		
 		public static void setBackgroundR(float r) {
 			prefs.putFloat(backgroundR, r);

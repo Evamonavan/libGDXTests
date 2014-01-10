@@ -1,5 +1,4 @@
 package com.johnathongoss.libgdxtests.screens;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
@@ -7,27 +6,27 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.examples.Volunteer;
 import com.johnathongoss.libgdxtests.tests.AnimationTest;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Box2D;
-import com.johnathongoss.libgdxtests.tests.Box2DTest;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
 import com.johnathongoss.libgdxtests.tests.Particles;
-import com.johnathongoss.libgdxtests.tests.SpeechBubbles;
+import com.johnathongoss.libgdxtests.tests.SpeechTest;
+import com.johnathongoss.libgdxtests.tests.TooltipTest;
 
 public class MainMenu extends BlankTestScreen {
 
 	TextButton exampleButton, miscButton;
 	private Array<TextButton> buttons;
-	public MainMenu(Game game) {
+	public MainMenu(MyGame game) {
 		super(game);				
 		Text.add("libGDX Tests |");
-		Text.add("0.6.1 |");
+		Text.add("0.6.2 |");
 		Text.add("johnathongoss.com |");
-		
 		
 	}
 	
@@ -163,6 +162,7 @@ public class MainMenu extends BlankTestScreen {
 		
 		buttons.add(debugButton);		
 		
+		
 		/*
 		 * Particles
 		 */
@@ -181,7 +181,7 @@ public class MainMenu extends BlankTestScreen {
 		buttons.add(debugButton);
 			
 		/*
-		 * Speech bubbles
+		 * Speech Bubbles
 		 */
 		
 		debugButton = new TextButton("Speech", skin);
@@ -191,11 +191,28 @@ public class MainMenu extends BlankTestScreen {
 		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				game.setScreen(new SpeechBubbles(game));
+				game.setScreen(new SpeechTest(game));
 			}
 		});		
 		
 		buttons.add(debugButton);		
+		
+		/*
+		 * Tooltip
+		 */
+		
+		debugButton = new TextButton("Tooltip", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+		
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new TooltipTest(game));
+			}
+		});		
+		
+		//buttons.add(debugButton);		
 		
 		for (TextButton button : buttons){			
 			stageui.addActor(button);			

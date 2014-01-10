@@ -1,30 +1,25 @@
 package com.johnathongoss.libgdxtests.screens;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.johnathongoss.libgdx.examples.FishTank;
-import com.johnathongoss.libgdx.examples.FishTankBox2D;
-import com.johnathongoss.libgdx.examples.PopCorns;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.misc.Dice;
 import com.johnathongoss.libgdxtests.misc.Timers;
 import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
-import com.johnathongoss.libgdxtests.tests.Camera2D;
-import com.johnathongoss.libgdxtests.tests.Collision;
 
 public class Misc extends BlankTestScreen implements InputProcessor{
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
-	public Misc(Game game) {
+	public Misc(MyGame game) {
 		super(game);				
 		Text.add("Misc |");
 		Text.add("bits and bobs |");

@@ -1,4 +1,4 @@
-package com.johnathongoss.libgdxtests.utils;
+package com.johnathongoss.libgdxtests.entities;
 
 public abstract class MyTimer{
 

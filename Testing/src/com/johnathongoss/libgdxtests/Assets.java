@@ -10,9 +10,7 @@ public class Assets {
 	public static BitmapFont font32, font24;	
 	public static Skin skin;
 	public static TextureAtlas spriteSheet;
-	public static void Load(){
-		
-		
+	public static void Load(){			
 		
 		font32 = new BitmapFont(Gdx.files.internal("data/font_32.fnt"),
 				Gdx.files.internal("data/font_32.png"), false);
@@ -21,7 +19,7 @@ public class Assets {
 		
 		skin = new Skin(Gdx.files.internal("uiskin.json"));
 		
-		spriteSheet = new TextureAtlas(Gdx.files.internal("textures/animd.atlas"), Gdx.files.internal("textures"));
+		spriteSheet = new TextureAtlas(Gdx.files.internal("textures/animations.atlas"), Gdx.files.internal("textures"));
 
 	}
 }

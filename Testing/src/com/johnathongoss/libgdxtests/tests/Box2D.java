@@ -1,10 +1,9 @@
 package com.johnathongoss.libgdxtests.tests;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -37,11 +36,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.MyGame;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Box2D extends BlankTestScreen implements GestureListener, InputProcessor{
 
-	public Box2D(Game game) {
+	public Box2D(MyGame game) {
 		super(game);
 
 		testName = "Box2D Test |";

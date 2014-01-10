@@ -1,16 +1,15 @@
-package com.johnathongoss.libgdx.examples;
+package com.johnathongoss.libgdxtests.examples;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,15 +25,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.entities.MyTimer;
+import com.johnathongoss.libgdxtests.entities.SpeechBubble;
 import com.johnathongoss.libgdxtests.screens.Examples;
-import com.johnathongoss.libgdxtests.utils.MyTimer;
-import com.johnathongoss.libgdxtests.utils.SpeechBubble;
 
-public class Talking implements Screen, InputProcessor{
-	private Game game;
+public class Talking implements Screen{
+	
+	MyInputProcessor input = new MyInputProcessor();
+	private MyGame game;
 	private SpriteBatch batch;
 	private Stage stage, stageui, stageBrick;
-	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
 	private TextButton backButton;
 	private Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
@@ -73,14 +74,8 @@ public class Talking implements Screen, InputProcessor{
 		}
 	};
 
-	public Talking (Game game){
+	public Talking (MyGame game){
 		this.game = game;
-
-		width = Gdx.app.getGraphics().getWidth();
-		height = Gdx.app.getGraphics().getHeight();
-
-		BUTTON_WIDTH = width/7;
-		BUTTON_HEIGHT = height/8;
 
 		stage = new Stage();
 		stageui = new Stage();
@@ -90,14 +85,12 @@ public class Talking implements Screen, InputProcessor{
 	@Override
 	public void show() {
 
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
 
 		backButton = new TextButton("Back", skin);
-		backButton.setHeight(BUTTON_HEIGHT);
-		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(0, height - BUTTON_HEIGHT);
+		backButton.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -109,25 +102,26 @@ public class Talking implements Screen, InputProcessor{
 
 		conversation = new Array<Speech>();
 
-		TBrian = new Talker("brick", ImageCache.getTexture("brian"), new Color(0.1f, 0.45f, 1f, 0.8f), width/4f, height/2f);
-		TRon = new Talker("brick", ImageCache.getTexture("ron"), new Color(0.9f, 0.65f, 0.1f, 0.8f), width*(3f/4f), height/2f);
-		TVeronica = new Talker("brick", ImageCache.getTexture("veronica"), new Color(1f, 0.1f, 0.8f, 0.8f), width/2f, height/4f);
-		TWorker = new Talker("brick", ImageCache.getTexture("worker"), new Color(0.5f, 0.35f, 0.3f, 0.8f), width/2f, height*(3f/4f));
+		TBrian = new Talker("brick", ImageCache.getTexture("brian"), new Color(0.1f, 0.45f, 1f, 0.8f), game.getWidth()/4f, game.getHeight()/2f);
+		TRon = new Talker("brick", ImageCache.getTexture("ron"), new Color(0.9f, 0.65f, 0.1f, 0.8f), game.getWidth()*(3f/4f), game.getHeight()/2f);
+		TVeronica = new Talker("brick", ImageCache.getTexture("veronica"), new Color(1f, 0.1f, 0.8f, 0.8f), game.getWidth()/2f, game.getHeight()/4f);
+		TWorker = new Talker("brick", ImageCache.getTexture("worker"), new Color(0.5f, 0.35f, 0.3f, 0.8f), game.getWidth()/2f, game.getHeight()*(3f/4f));
 
-		TBrick = new Talker("brick", ImageCache.getTexture("brick"), new Color(0.3f, 0.3f, 0.3f, 0.8f), MathUtils.random(0, width), MathUtils.random(0, height));
+		TBrick = new Talker("brick", ImageCache.getTexture("brick"), new Color(0.3f, 0.3f, 0.3f, 0.8f), MathUtils.random(0, game.getWidth()), MathUtils.random(0, game.getHeight()));
 		
 		// TODO Brick extends Talker class?
 		brickTimer = new MyTimer(MathUtils.random(0f, 0f)) {
 			
 			@Override
 			protected void perform() {
-				TBrick.setTarget(new Vector2(MathUtils.random(0, width), MathUtils.random(0, height)));
+				TBrick.setTarget(new Vector2(MathUtils.random(0, game.getWidth()), MathUtils.random(0, game.getHeight())));
 				brickTimer.setCap(MathUtils.random(4f, 10f));
 			}
 		};
 		brickTimer.setRepeating(true);
 		brickTimer.start();
 		
+		stage.addActor(TBrick);
 		stage.addActor(TBrian);
 		stage.addActor(TRon);
 		stage.addActor(TVeronica);
@@ -187,8 +181,29 @@ public class Talking implements Screen, InputProcessor{
 		lineIndex = 0;
 
 		nextLine();
-	}
+	}	
 
+	@Override
+	public void render(float delta) {
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);	
+
+		batch.begin();
+		Assets.font24.drawMultiLine(batch, "Talking Example |", 0, 24, game.getWidth(), HAlignment.RIGHT);		
+		batch.end();
+		
+		stage.act(delta);
+		checkSpeechBubbles();
+		stage.draw();			
+		
+		stageBrick.act(delta);
+		stageBrick.draw();
+
+		stageui.act(delta);
+		stageui.draw();
+		
+		brickTimer.update(delta);
+	}
+	
 	private void cAdd(Talker t, String text) {
 
 		conversation.add(new Speech(t, text));
@@ -206,31 +221,8 @@ public class Talking implements Screen, InputProcessor{
 		}
 	}
 
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);	
-
-		batch.begin();
-		TBrick.act(delta);
-		TBrick.draw(batch, 1f);
-		Assets.font24.drawMultiLine(batch, "Talking Example |", 0, 24, width, HAlignment.RIGHT);		
-		batch.end();
+	private void checkSpeechBubbles() {		
 		
-		stage.act(delta);
-		checkSpeechBubbles();
-		stage.draw();			
-		
-		stageBrick.act(delta);
-		stageBrick.draw();
-
-		stageui.act(delta);
-		stageui.draw();
-		
-		brickTimer.update(delta);
-	}
-
-	private void checkSpeechBubbles() {
-
 		for (Actor sb : stage.getActors()){
 
 			if (sb instanceof SpeechBubble && !((SpeechBubble) sb).isAlive()){
@@ -252,15 +244,10 @@ public class Talking implements Screen, InputProcessor{
 	}
 
 	@Override
-	public void resize(int width, int height) {
-		this.width = width;
-		this.height = height;
+	public void resize(int width, int height) {		
 
-		BUTTON_WIDTH = width/7;
-		BUTTON_HEIGHT = height/8;	
-
-		backButton.setBounds(0, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-		stage.setViewport(width, height, true);
+		backButton.setBounds(0, height - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		//stage.setViewport(width, height, true);
 	}	
 
 	@Override
@@ -285,6 +272,7 @@ public class Talking implements Screen, InputProcessor{
 		batch.dispose();
 		stage.dispose();		
 		stageui.dispose();
+		stageBrick.dispose();
 		skin.dispose();
 	}
 
@@ -366,11 +354,13 @@ public class Talking implements Screen, InputProcessor{
 		public Color getColor() {			
 			return color;
 		}
+		
+		public String getName(){
+			return name;
+		}
 
 		public void setColor(Color color){
-
 			this.color = color;
-
 		}
 
 		public void setPosition(Vector2 position){			
@@ -446,53 +436,60 @@ public class Talking implements Screen, InputProcessor{
 
 	}
 
-	@Override
-	public boolean keyDown(int keycode) {
-		
-		return false;
-	}
+	private class MyInputProcessor implements InputProcessor{
 
-	@Override
-	public boolean keyUp(int keycode) {
-		if(keycode == Keys.BACK){
-			game.setScreen(new Examples(game));
+		@Override
+		public boolean keyDown(int keycode) {
+			return false;
 		}
-		
-		return false;
-	}
 
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
+		@Override
+		public boolean keyUp(int keycode) {
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		SpeechBubble sb = speechBubblePool.obtain();
-		sb.init(brickLines[MathUtils.random(0, brickLines.length - 1)], TBrick.getX(), TBrick.getY() + TBrick.getHeight(), TBrick.getPic());
-		sb.setColor(TBrick.getColor());
-		sb.setFollow(TBrick);
-		stageBrick.addActor(sb);
-		return false;
-	}
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				
+				game.setScreen(new Examples(game));
+			}
 
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
+			return false;
+		}
 
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
-	}
+		@Override
+		public boolean keyTyped(char character) {
+			return false;
+		}
 
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		return false;
-	}
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+			stageBrick.clear();
+			SpeechBubble sb = speechBubblePool.obtain();
+			sb.init(brickLines[MathUtils.random(0, brickLines.length - 1)], TBrick.getX(), TBrick.getY() + TBrick.getHeight(), TBrick.getPic());
+			sb.setColor(TBrick.getColor());
+			sb.setFollow(TBrick);
+			stageBrick.addActor(sb);
+			return false;
+		}
 
-	@Override
-	public boolean scrolled(int amount) {
-		return false;
+		@Override
+		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {
+			return false;
+		}
+
+		@Override
+		public boolean mouseMoved(int screenX, int screenY) {
+			return false;
+		}
+
+		@Override
+		public boolean scrolled(int amount) {
+			return false;
+		}
 	}
 }

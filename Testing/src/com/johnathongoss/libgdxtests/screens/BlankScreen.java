@@ -15,12 +15,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.johnathongoss.libgdxtests.MyGame;
 
 public abstract class BlankScreen implements Screen, InputProcessor{
 
 	protected Stage stage, stageui;
 	protected SpriteBatch batch, batchui; // batchui is not affected by camera control
-	protected Game game;
+	protected MyGame game;
 	protected OrthographicCamera cam;
 	protected float width;
 	protected float height;		
@@ -44,7 +45,7 @@ public abstract class BlankScreen implements Screen, InputProcessor{
 	protected static final float BOX_WORLD_TO = 50f;  
 	protected boolean showDebug = false;
 
-	public BlankScreen(Game game) {
+	public BlankScreen(MyGame game) {
 		this.game = game;
 
 		batch = new SpriteBatch();

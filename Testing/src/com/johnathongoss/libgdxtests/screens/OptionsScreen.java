@@ -1,11 +1,10 @@
 package com.johnathongoss.libgdxtests.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,15 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
 
 public class OptionsScreen implements Screen, InputProcessor{
-	private Game game;
+	private MyGame game;
 
 	private Stage stageui;
 
 	float r, g, b;
 
-	public OptionsScreen(Game game) {
+	public OptionsScreen(MyGame game) {
 		this.game = game;
 	}
 
@@ -62,17 +62,29 @@ public class OptionsScreen implements Screen, InputProcessor{
 		button.setPosition(0, Gdx.app.getGraphics().getHeight() - button.getHeight());
 		stageui.addActor(button);
 
-		final CheckBox cb = new CheckBox(" Limit Particle Effects |", Assets.skin);	
-		cb.setChecked(AppData.Prefs.isLimitParticles());
-		cb.addListener(new ClickListener() {
+		final CheckBox cb_lpe = new CheckBox(" Limit Particle Effects |", Assets.skin);	
+		cb_lpe.setChecked(AppData.Prefs.isLimitParticles());
+		cb_lpe.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				boolean enabled = cb.isChecked();
+				boolean enabled = cb_lpe.isChecked();
 				AppData.Prefs.setLimitParticles(enabled);
 			}
 		});	
-		cb.setPosition(Gdx.app.getGraphics().getWidth() - cb.getWidth(), Gdx.app.getGraphics().getHeight() - cb.getHeight() - button.getHeight());
-		stageui.addActor(cb);
+		cb_lpe.setPosition(Gdx.app.getGraphics().getWidth() - cb_lpe.getWidth(), Gdx.app.getGraphics().getHeight() - cb_lpe.getHeight() - button.getHeight());
+		stageui.addActor(cb_lpe);
+		
+		final CheckBox cb_es = new CheckBox(" Enable sound |", Assets.skin);	
+		cb_es.setChecked(AppData.Prefs.isEnableSound());
+		cb_es.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				boolean enabled = cb_es.isChecked();
+				AppData.Prefs.setEnableSound(enabled);
+			}
+		});	
+		cb_es.setPosition(Gdx.app.getGraphics().getWidth() - cb_es.getWidth(), Gdx.app.getGraphics().getHeight() - cb_es.getHeight()*3 - button.getHeight());
+		stageui.addActor(cb_es);
 		
 		r = AppData.Prefs.getBackgroundR();
 		g = AppData.Prefs.getBackgroundG();
@@ -104,8 +116,10 @@ public class OptionsScreen implements Screen, InputProcessor{
 				Gdx.gl.glClearColor(r, g, b, 1f);
 			}
 		});	
-		button.setPosition(Gdx.app.getGraphics().getWidth() - button.getWidth(), cb.getY() - button.getHeight() - cb.getHeight());
+		button.setPosition(Gdx.app.getGraphics().getWidth() - button.getWidth(), cb_es.getY() - button.getHeight() - cb_es.getHeight());
 		stageui.addActor(button);
+		
+		
 	}
 
 	@Override

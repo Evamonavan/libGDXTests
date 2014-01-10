@@ -1,50 +1,61 @@
-package com.johnathongoss.libgdx.examples;
+package com.johnathongoss.libgdxtests.examples;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.johnathongoss.libgdxtests.Assets;
+import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.entities.MyTimer;
 import com.johnathongoss.libgdxtests.screens.Examples;
-import com.johnathongoss.libgdxtests.screens.MainMenu;
-import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
-import com.johnathongoss.libgdxtests.utils.MyTimer;
 
-public class PopCorns extends BlankTestScreen implements InputProcessor{	
+public class PopCorns implements Screen{		
 
-	public PopCorns(Game game) {
-		super(game);
-		// TODO Auto-generated constructor stub
-	}
-
+	MyInputProcessor input = new MyInputProcessor();	
+	
+	MyGame game;
+	private Stage stage, stageui;
+	private SpriteBatch batchui;
+	String testName;
+	
 	MyTimer timer;
 	private int numBalls;
 	private float gravity;
 	private float hardness;
 	private float conservedEnergy;
 	private Array<Corn> corns;
-
-	@Override
-	public void show(){
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
-		Gdx.input.setInputProcessor(im);		
-		Gdx.input.setCatchBackKey(true);
+	
+	public float friction;
+	public ShapeRenderer shapeRenderer;
+	
+	TextButton backButton;
+	
+	public PopCorns(MyGame game) {
+		this.game = game;
+		
+		testName = "Pop Corn Example |";
+		
+		stage = new Stage();
+		stageui = new Stage();
+		batchui= new SpriteBatch();		
 		
 		shapeRenderer = new ShapeRenderer();
 		timer = new MyTimer(MathUtils.random(2f, 6f)) {
@@ -57,17 +68,21 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 
 			}
 		};
+		
+		backButton = new TextButton("Back", Assets.skin);
+		corns = new Array<Corn>();
+	}
+
+	@Override
+	public void show(){
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, input);
+		Gdx.input.setInputProcessor(im);		
+		Gdx.input.setCatchBackKey(true);		
 
 		timer.start();
-		timer.setRepeating(true);
-
-		numBalls = 50;
-		testName = "Pop Corn Example |";
+		timer.setRepeating(true);					
 		
-		backButton = new TextButton("Back", skin);
-		backButton.setHeight(BUTTON_HEIGHT);
-		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(0, height - BUTTON_HEIGHT);
+		backButton.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -80,28 +95,15 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 		gravity = -0.1f;
 		hardness = 0.6f;
 		conservedEnergy = 0.85f;
-		friction = -0.75f;
+		friction = -0.75f;		
 		
-		corns = new Array<Corn>();
+		numBalls = 50;
 		for (int i = 0; i < numBalls ; i++) {
-			corns.add(new Corn(MathUtils.random(width), MathUtils.random(0, height/2), width/30 , i, corns));
+			corns.add(new Corn(MathUtils.random(game.getWidth()), MathUtils.random(0, game.getHeight()/2), game.getWidth()/30 , i, corns));
 			corns.get(i).setVelocity(0, 0);
-			//balls.get(i).setTouchable(Touchable.disabled);
 			stage.addActor(corns.get(i));
 		}		
-	}
-
-	int tempInt;
-	public float friction;
-	public ShapeRenderer shapeRenderer;
-
-	protected void popTheCorn() {
-
-		tempInt = MathUtils.random(0, corns.size - 1);
-		if (!corns.get(tempInt).popped){
-			corns.get(tempInt).pop();
-		}
-	}
+	}	
 
 	@Override
 	public void render(float delta) {	
@@ -111,41 +113,52 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 		stageui.act(delta);
 		stageui.draw();	
 
-		//updateText();
-		renderText();
-
 		if  (gravity > -0.8f)
 			gravity -= delta;
 
 		timer.update(delta);
 		
 		batchui.begin();
-		renderTestName(batchui);
+		Assets.font24.drawMultiLine(batchui, testName, 0, 24, game.getWidth(), HAlignment.RIGHT);
 		batchui.end();
 	}	
+	
+	private void popTheCorn() {
 
-	@Override
-	protected void updateText() {
-		Text.clear();
-
-		Text.add(timer.getCurrent() + "");		
-		//Text.add(conservedEnergy + " |");
-
+		int tempInt = MathUtils.random(0, corns.size - 1);
+		if (!corns.get(tempInt).popped){
+			corns.get(tempInt).pop();
+		}
 	}
 
 	@Override
-	protected void renderText() {
-		
+	public void resize(int width, int height) {}
 
+	@Override
+	public void hide() {
+		dispose();		
 	}
 
-	public class Corn extends Actor {
+	@Override
+	public void pause() {}
+
+	@Override
+	public void resume() {}
+
+	@Override
+	public void dispose() {
+		stage.dispose();
+		stageui.dispose();
+		batchui.dispose();
+	}
+
+	private class Corn extends Actor {
 		public boolean popped;
 
 		public void pop(){
 			popped = true;
 
-			setDiameter(MathUtils.random(width/18, width/12));
+			setDiameter(MathUtils.random(game.getWidth()/18, game.getWidth()/12));
 			setColor(1f, 0.8f, 0, 1);
 			setVelocity(MathUtils.random(-9f, 9f), MathUtils.random(-9f, 9f));
 
@@ -155,8 +168,7 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 		float vx = 0;
 		float vy = 0;
 		int id;
-		Color color = Color.WHITE;
-		Array<Corn> others;
+		Array<Corn> others;		
 
 		public Corn(float xin, float yin, float din, int idin, Array<Corn> balls) {
 			setX(xin);
@@ -185,33 +197,11 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 
 
 		} 
-
-		Color tempColor;
-		public void changeColor() {
-			tempColor = new Color(MathUtils.random(0f, 1f), MathUtils.random(0f, 1f), MathUtils.random(0f, 1f), MathUtils.random(0f, 1f));
-			addAction(Actions.color(tempColor, 1.4f, Interpolation.swingOut));
-			//setColor();
-
-		}
-
-		public void removeBall(Corn ball){
-
-			Gdx.app.log("", others.removeValue(ball, true) + "");
-
-
-			for (int i = 0; i < others.size; i++)
-				if (others.get(i) == ball)
-					Gdx.app.log("", "" + others.removeValue(others.get(i), true));
-		}
-
-		public void Fling(float velocityX, float velocityY) {
-			vx = velocityX*0.01f;
-			vy = velocityY*0.01f;
-		}		
-
+		
 		public float getXOffset(){
 			return getX() + diameter/2;			
 		}
+		
 		public float getYOffset(){
 			return getY() + diameter/2;			
 		}
@@ -244,16 +234,16 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 			vy += gravity;
 			addX(vx);
 			addY(vy);
-			if (getXOffset() + diameter/2> width) {
-				setX(width - diameter);
+			if (getXOffset() + diameter/2> game.getWidth()) {
+				setX(game.getWidth() - diameter);
 				vx *= friction; 
 			}
 			else if (getXOffset() - diameter/2 < 0) {
 				setX(0);
 				vx *= friction;
 			}
-			if (getYOffset() + diameter/2> height) {
-				setY(height - diameter);
+			if (getYOffset() + diameter/2> game.getHeight()) {
+				setY(game.getHeight() - diameter);
 				vy *= friction; 
 			} 
 			else if (getYOffset() - diameter/2 < 0) {
@@ -286,12 +276,6 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 			shapeRenderer.setColor(Color.BLACK);
 			shapeRenderer.circle(getXOffset(), getYOffset(), diameter/2);
 			shapeRenderer.end();
-
-			//			shapeRenderer.begin(ShapeType.Line);
-			//			shapeRenderer.scale(getScaleX(), getScaleY(), 0);
-			//			shapeRenderer.setColor(Color.WHITE);
-			//			shapeRenderer.rect(getX(), getY(), diameter, diameter);
-			//			shapeRenderer.end();
 		}
 
 		@Override
@@ -319,57 +303,57 @@ public class PopCorns extends BlankTestScreen implements InputProcessor{
 			setBounds(getX() - diameter/2, getY() - diameter/2, diameter,diameter);
 			setOrigin(diameter/2, diameter/2);
 			setScale(1f);
-
 		}
 	}
+	
+	private class MyInputProcessor implements InputProcessor{
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		if(keycode == Keys.BACK){
-			game.setScreen(new Examples(game));
+		@Override
+		public boolean keyDown(int keycode) {
+			return false;
 		}
-		return false;
-	}
 
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		@Override
+		public boolean keyUp(int keycode) {
 
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				
+				game.setScreen(new Examples(game));
+			}
 
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+			return false;
+		}
 
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		@Override
+		public boolean keyTyped(char character) {
+			return false;
+		}
 
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+			return false;
+		}
 
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
+		@Override
+		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {
+			return false;
+		}
+
+		@Override
+		public boolean mouseMoved(int screenX, int screenY) {
+			return false;
+		}
+
+		@Override
+		public boolean scrolled(int amount) {
+			return false;
+		}
 	}
 }
