@@ -14,6 +14,7 @@ import com.johnathongoss.libgdxtests.tests.BlankTestScreen;
 import com.johnathongoss.libgdxtests.tests.Box2D;
 import com.johnathongoss.libgdxtests.tests.Camera2D;
 import com.johnathongoss.libgdxtests.tests.Collision;
+import com.johnathongoss.libgdxtests.tests.LightTest;
 import com.johnathongoss.libgdxtests.tests.Particles;
 import com.johnathongoss.libgdxtests.tests.SpeechTest;
 import com.johnathongoss.libgdxtests.tests.TooltipTest;
@@ -25,9 +26,8 @@ public class MainMenu extends BlankTestScreen {
 	public MainMenu(MyGame game) {
 		super(game);				
 		Text.add("libGDX Tests |");
-		Text.add("0.6.2 |");
-		Text.add("johnathongoss.com |");
-		
+		Text.add("0.6.3 |");
+		Text.add("johnathongoss.com |");		
 	}
 	
 	@Override
@@ -157,6 +157,23 @@ public class MainMenu extends BlankTestScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Collision(game));
+			}
+		});		
+		
+		buttons.add(debugButton);		
+		
+		/*
+		 * Light Test 1
+		 */
+		
+		debugButton = new TextButton("Light 1", skin);
+		debugButton.setHeight(BUTTON_HEIGHT);
+		debugButton.setWidth(BUTTON_WIDTH);
+		
+		debugButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				game.setScreen(new LightTest(game));
 			}
 		});		
 		
