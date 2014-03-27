@@ -37,15 +37,55 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
-public class Box2D extends BlankTestScreen implements GestureListener, InputProcessor{
+public class Box2D extends BlankTestScreen implements GestureListener{
 
 	public Box2D(MyGame game) {
 		super(game);
 
 		testName = "Box2D Test |";
 	}
+	
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+		
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {
+		
+			return false;
+		}
+		
+		@Override
+		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+			Gdx.app.log("", "up");
+			// if a mouse joint exists we simply destroy it
+			if (mouseJoint != null) {
+				world.destroyJoint(mouseJoint);
+				mouseJoint = null;
+			}
+			return false;
+			
+			
+		};
+	};
 
 	World world; 
 	Box2DDebugRenderer debugRenderer; 
@@ -58,13 +98,15 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 	private boolean showDebug = false;
 	@Override  
 	public void show() {  
+		//Disable Ads for tests
+		game.showAds(true);
 
 		/*
 		 * Toggle Debug
 		 */		
 
 		debugButton = new TextButton("Debug", skin);
-		debugButton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		debugButton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2, BUTTON_WIDTH, BUTTON_HEIGHT);
 		//debugButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
 		debugButton.addListener(new ClickListener() {
 			@Override
@@ -77,11 +119,11 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 
 		bodies = new Array<Body>();
 		addBackButton();         
-		
-		InputMultiplexer im = new InputMultiplexer(stageui, stage,new GestureDetector(this),  this);
+
+		InputMultiplexer im = new InputMultiplexer(stageui, stage,new GestureDetector(this), input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
-		
+
 		sprite = new Sprite(circle);
 
 		batch = new SpriteBatch();
@@ -89,26 +131,26 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		cam = new OrthographicCamera();
 
 		world = new World(new Vector2(0, -9.81f), true);	
-		
+
 		world.setContactListener(new ContactListener() {
-			
+
 			@Override
 			public void preSolve(Contact contact, Manifold oldManifold) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void postSolve(Contact contact, ContactImpulse impulse) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void endContact(Contact contact) {
 				//contact.getFixtureA().getBody().getLinearVelocity().set(10, 10);
 				//contact.getFixtureA().getBody().applyLinearImpulse(new Vector2(1, 1), new Vector2(0, 0), true);
-				
+
 				Vector2 dir = new Vector2();
 				dir.x = MathUtils.random(-3f, 3f);
 				dir.y = MathUtils.random(-1f, 1f);
@@ -117,16 +159,16 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 				//contact.getFixtureB().getBody().setLinearVelocity(dir.scl(-1, -1));
 				//contact.getFixtureB().getBody().setLinearVelocity(contact.getFixtureB().getBody().getLinearVelocity().add(contact.getFixtureA().getBody().getLinearVelocity()));
 			}
-			
+
 			@Override
 			public void beginContact(Contact contact) {
 				//contact.getFixtureA().getBody().getLinearVelocity().set(1, 1);
 				Gdx.app.log("", "Contact");
-				
+
 			}
 		});
-		
-		
+
+
 		// reusable construction objects
 		BodyDef bodyDef = new BodyDef();
 		// we also need an invisible zero size ground body
@@ -152,7 +194,7 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 			float density, float friction, float restitution, BodyDef bodyDef, FixtureDef fixtureDef) {
 		bodyDef.position.set(WORLD_TO_BOX*x, WORLD_TO_BOX*y);
 		bodyDef.angularVelocity = 0;
-	
+
 		PolygonShape boxShape = new PolygonShape();
 		boxShape.setAsBox(WORLD_TO_BOX*w/2, WORLD_TO_BOX*h/2);
 
@@ -160,13 +202,13 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		fixtureDef.density = density;
 		fixtureDef.friction = friction;
 		fixtureDef.restitution = restitution;
-		
+
 		Sprite sprite = new Sprite(ImageCache.getTexture("background"));
 		sprite.setSize(WORLD_TO_BOX*w, WORLD_TO_BOX*h);
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 
 		Body box = world.createBody(bodyDef);
-				
+
 		box.setUserData(sprite);
 		box.createFixture(fixtureDef);
 
@@ -209,15 +251,15 @@ public class Box2D extends BlankTestScreen implements GestureListener, InputProc
 		fixtureDef.density = 2.5f;
 		fixtureDef.restitution = .8f;
 		fixtureDef.friction = .25f;
-		
-		
-		
+
+
+
 		Sprite sprite = new Sprite(ImageCache.getTexture("circle"));
 		sprite.setSize(radius*2*WORLD_TO_BOX, radius*2*WORLD_TO_BOX);
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 
 		Body ball = world.createBody(bodyDef);
-		
+
 		ball.setUserData(sprite);
 		ball.createFixture(fixtureDef);
 		ballShape.dispose();

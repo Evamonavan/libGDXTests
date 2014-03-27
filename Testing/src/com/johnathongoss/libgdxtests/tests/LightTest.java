@@ -1,17 +1,16 @@
 package com.johnathongoss.libgdxtests.tests;
 
 import java.text.DecimalFormat;
-import java.text.MessageFormat;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -30,8 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
-import com.johnathongoss.libgdxtests.entities.SpeechBubble;
-import com.johnathongoss.libgdxtests.screens.Examples;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 /**
@@ -43,7 +41,37 @@ import com.johnathongoss.libgdxtests.screens.MainMenu;
 public class LightTest implements Screen {   
 
 	MyGame game;		
-	MyInputProcessor input = new MyInputProcessor();
+	MyInputProcessor input = new MyInputProcessor(){		
+
+		@Override
+		public boolean keyUp(int keycode) {
+
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+
+				game.setScreen(new MainMenu(game));
+			}
+
+			return false;
+		}
+
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {			
+			lightPos.x = Gdx.input.getX();
+			lightPos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			return false;
+		}
+
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {			
+			lightPos.x = Gdx.input.getX();
+			lightPos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+			return false;
+		}
+
+	};
 	Stage stageui;
 
 	Texture texture, texture_n;
@@ -58,7 +86,7 @@ public class LightTest implements Screen {
 	Random rnd = new Random();
 
 	// position of our light
-	final Vector3 DEFAULT_LIGHT_POS = new Vector3(0f, 0f, 0.05f);
+	final Vector3 DEFAULT_LIGHT_POS = new Vector3(0f, 0f, 0.06f);
 	// the color of our light
 	final Vector3 DEFAULT_LIGHT_COLOR = new Vector3(1f, 0.7f, 0.6f);
 	// the ambient color (color to use when unlit)
@@ -97,7 +125,7 @@ public class LightTest implements Screen {
 
 	public LightTest(MyGame game) {
 		this.game = game;
-		
+
 		stageui = new Stage();
 	}
 
@@ -117,7 +145,9 @@ public class LightTest implements Screen {
 	private Texture rock, rock_n, teapot, teapot_n;
 
 	public void show() {	
-
+		//Disable Ads for tests
+		game.showAds(true);
+		
 		// load our textures
 		rock = new Texture(Gdx.files.internal("data/teapot.png"));
 		rock_n = new Texture(Gdx.files.internal("data/teapot_n.png"));
@@ -207,74 +237,102 @@ public class LightTest implements Screen {
 			}
 		});
 
-		InputMultiplexer im = new InputMultiplexer(input, stageui);
+		InputMultiplexer im = new InputMultiplexer(stageui, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
-		
+
 		font = new BitmapFont();
-		
+
 		/*
 		 * Buttons
 		 */
-		
+
 		TextButton button = new TextButton("Normal [-]", Assets.skin);
-		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
-		button.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				strength -= 0.1f;
-				
-				if (strength < 0)
-					strength = 0;
-			}
-		});	
-		
-		stageui.addActor(button);
-		
-		button = new TextButton("Normal [+]", Assets.skin);
-		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
-		button.addListener(new ClickListener() {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				strength += 0.1f;
-				
-				if (strength > 1f)
-					strength = 1;
-			}
-		});	
-		
-		stageui.addActor(button);
-		
-		button = new TextButton("pos.z [-]", Assets.skin);
 		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				lightPos.z -= 0.05f;	
-				
-				if (lightPos.z < 0.05f)
-					lightPos.z = 0.05f;
+				strength -= 0.1f;
+
+				if (strength < 0)
+					strength = 0;
 			}
 		});	
-		
+
 		stageui.addActor(button);
-		
-		button = new TextButton("pos.z [+]", Assets.skin);
+
+		button = new TextButton("Normal [+]", Assets.skin);
 		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				lightPos.z += 0.05f;	
-				
-				if (lightPos.z > 0.3f)
-					lightPos.z = 0.3f;
+				strength += 0.1f;
+
+				if (strength > 1f)
+					strength = 1;
 			}
 		});	
-		
+
+		stageui.addActor(button);
+
+		button = new TextButton("Distance [+]", Assets.skin);
+		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight()*3, game.getButtonWidth(), game.getButtonHeight());
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				lightPos.z -= 0.02f;	
+
+				if (lightPos.z < 0.02f)
+					lightPos.z = 0.02f;
+			}
+		});	
+
+		stageui.addActor(button);
+
+		button = new TextButton("Distance [-]", Assets.skin);
+		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*3, game.getButtonWidth(), game.getButtonHeight());
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				lightPos.z += 0.02f;	
+
+				if (lightPos.z > 0.2f)
+					lightPos.z = 0.2f;
+			}
+		});	
+
 		stageui.addActor(button);
 		
+		button = new TextButton("Ambience [-]", Assets.skin);
+		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*4, game.getButtonWidth(), game.getButtonHeight());
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ambientIntensity -= 0.1f;	
+
+				if (ambientIntensity < -0.8f)
+					ambientIntensity = -0.8f;
+			}
+		});	
+
+		stageui.addActor(button);
+		
+		button = new TextButton("Ambience [+]", Assets.skin);
+		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight()*4, game.getButtonWidth(), game.getButtonHeight());
+		button.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				ambientIntensity += 0.1f;	
+
+				if (ambientIntensity > 1.2f)
+					ambientIntensity = 1.2f;
+			}
+		});	
+
+		stageui.addActor(button);
+
 		button = new TextButton("Amb. Colour", Assets.skin);
-		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*3, game.getButtonWidth(), game.getButtonHeight());
+		button.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*5, game.getButtonWidth(), game.getButtonHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -283,11 +341,11 @@ public class LightTest implements Screen {
 				program.end();
 			}
 		});	
-		
+
 		stageui.addActor(button);
-		
+
 		button = new TextButton("Light Colour", Assets.skin);
-		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight()*3, game.getButtonWidth(), game.getButtonHeight());
+		button.setBounds(game.getWidth() - game.getButtonWidth()*2, game.getHeight() - game.getButtonHeight()*5, game.getButtonWidth(), game.getButtonHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -296,22 +354,23 @@ public class LightTest implements Screen {
 				program.end();
 			}
 		});	
-		
+
 		stageui.addActor(button);		
-		
+
 		button = new TextButton("Back", Assets.skin);
-		button.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		button.setBounds(0, game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		button.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new MainMenu(game));
 			}
 		});	
-		
+
 		stageui.addActor(button);
-		
-		
-		
+
+		lightPos.x = 400;
+		lightPos.y = 200;
+
 	}
 
 	private Vector3 rndColor() {
@@ -319,6 +378,7 @@ public class LightTest implements Screen {
 	}
 
 	private ShaderProgram createShader() {
+		GL20 gl = Gdx.graphics.getGL20();
 		// see the code here: http://pastebin.com/7fkh1ax8
 		// simple illumination model using ambient, diffuse (lambert) and attenuation
 		// see here: http://nccastaff.bournemouth.ac.uk/jmacey/CGF/slides/IlluminationModels4up.pdf
@@ -441,35 +501,32 @@ public class LightTest implements Screen {
 		//now let's simulate how our normal map will be sampled using strength
 		//we can do this simply by blending a blue fill overtop
 
-		
+
 		/** default text*/
-//		String str = MessageFormat.format(TEXT, ambientIntensity,
-//				attenuation.x, attenuation.y, DEC_FMT.format(attenuation.z),
-//				strength, lightPos.z);
+		//		String str = MessageFormat.format(TEXT, ambientIntensity,
+		//				attenuation.x, attenuation.y, DEC_FMT.format(attenuation.z),
+		//				strength, lightPos.z);
 		//font.drawMultiLine(batch, str, 10, Gdx.graphics.getHeight()-10);
 
 		Assets.font24.draw(batch, "Diffuse Color", texWidth*2+30, IMG_Y+texHeight + 30);
 		Assets.font24.draw(batch, "Normal Map", 10, IMG_Y+texHeight + 30);
 		Assets.font24.draw(batch, "Final Color", texWidth+20, IMG_Y+texHeight + 30);
-		
+
 		/*
 		 * Text
 		 */
-		
-		Assets.font24.drawMultiLine(batch, "Light Using Normals Test |", 0, Assets.font24.getLineHeight(), game.getWidth(), HAlignment.RIGHT);
-		
-		
-		Assets.font24.drawMultiLine(batch, String.format("%.1f", strength) + " |", 0, game.getHeight() - game.getButtonHeight()/2, game.getWidth() - game.getButtonWidth()*2, HAlignment.RIGHT);
-		Assets.font24.drawMultiLine(batch, String.format("%.2f", lightPos.z) + " |", 0, game.getHeight() - game.getButtonHeight()/2 - game.getButtonHeight(), game.getWidth() - game.getButtonWidth()*2, HAlignment.RIGHT);
-		
+
+		Assets.font24.drawMultiLine(batch, "Light using Normals Test |", 0, Assets.font24.getLineHeight(), game.getWidth(), HAlignment.RIGHT);
+
+
+		Assets.font24.drawMultiLine(batch, String.format("%.1f", strength) + " |", 0, game.getHeight() - game.getButtonHeight()/2 - game.getButtonHeight(), game.getWidth() - game.getButtonWidth()*2, HAlignment.RIGHT);
+		Assets.font24.drawMultiLine(batch, String.format("%.2f", lightPos.z) + " |", 0, game.getHeight() - game.getButtonHeight()/2 - game.getButtonHeight()*2, game.getWidth() - game.getButtonWidth()*2, HAlignment.RIGHT);
+		Assets.font24.drawMultiLine(batch, String.format("%.2f", ambientIntensity) + " |", 0, game.getHeight() - game.getButtonHeight()/2 - game.getButtonHeight()*3, game.getWidth() - game.getButtonWidth()*2, HAlignment.RIGHT);
+
 		batch.end();
 
 		// start our FX batch, which will bind our shader program
-		fxBatch.begin();
-
-		// get y-down light position based on mouse/touch
-		lightPos.x = Gdx.input.getX();
-		lightPos.y = Gdx.graphics.getHeight() - Gdx.input.getY();
+		fxBatch.begin();		
 
 		// handle attenuation input
 		if (Gdx.input.isKeyPressed(Keys.NUM_4)) {
@@ -522,7 +579,7 @@ public class LightTest implements Screen {
 		// texture0...
 		fxBatch.draw(texture, texWidth + 20, IMG_Y);
 		fxBatch.end();
-		
+
 		stageui.act(delta);
 		stageui.draw();
 	}
@@ -544,56 +601,5 @@ public class LightTest implements Screen {
 		// TODO Auto-generated method stub
 
 	}
-	
-	private class MyInputProcessor implements InputProcessor{
 
-		@Override
-		public boolean keyDown(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-
-			if(keycode == Keys.BACK || 
-					keycode == Keys.BACKSPACE ||
-					keycode == Keys.ESCAPE){
-				
-				game.setScreen(new MainMenu(game));
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(int amount) {
-			return false;
-		}
-	}
 }

@@ -2,18 +2,15 @@ package com.johnathongoss.libgdxtests.examples;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -26,17 +23,37 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.EffectsCache;
-import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.Sounds;
 import com.johnathongoss.libgdxtests.entities.DamageImage;
 import com.johnathongoss.libgdxtests.entities.Effect;
 import com.johnathongoss.libgdxtests.entities.SpeechBubble;
 import com.johnathongoss.libgdxtests.screens.Examples;
-import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Volunteer implements Screen{
-	MyInputProcessor input = new MyInputProcessor();
+	MyInputProcessor input = new MyInputProcessor(){	
+
+		@Override
+		public boolean keyUp(int keycode) {
+
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+
+				game.setScreen(new Examples(game));
+			}
+
+			return false;
+		}	
+
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {				
+			attackWithWeapon();
+			return false;
+		}
+	};
+
 	MyGame game;
 	OrthographicCamera cam;
 	Stage stage, stageui;
@@ -51,13 +68,13 @@ public class Volunteer implements Screen{
 	String[] weaponNames = {"Sword", "Heal"};
 
 	private Array<PooledEffect> Effects;
-	
+
 	private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
-        @Override
-        protected SpeechBubble newObject() {
-                return new SpeechBubble();
-        }
-    };
+		@Override
+		protected SpeechBubble newObject() {
+			return new SpeechBubble();
+		}
+	};
 
 	public Volunteer(MyGame game){
 		this.game = game;
@@ -76,14 +93,14 @@ public class Volunteer implements Screen{
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		
+
 		checkSpeechBubbles();
 		for(Actor effect : stage.getActors()){
-			
+
 			if (effect instanceof Effect && !((Effect) effect).isAlive())
 				stage.getActors().removeValue(effect, true);
 		}
-		
+
 		checkDamageImages(); //TODO no need for poolable
 		batch.begin();
 		for (PooledEffect effect : Effects){
@@ -101,15 +118,17 @@ public class Volunteer implements Screen{
 
 		stageui.act(delta);
 		stageui.draw();
+
+		game.CameraShaker.update(delta);
 	}
-	
+
 	private void checkSpeechBubbles() {
 
 		for (Actor sb : stageui.getActors()){
 
 			if (sb instanceof SpeechBubble && !((SpeechBubble) sb).isAlive()){
 				stageui.getActors().removeValue(sb, true);
-                speechBubblePool.free((SpeechBubble) sb);	
+				speechBubblePool.free((SpeechBubble) sb);	
 			}
 
 		}
@@ -117,11 +136,14 @@ public class Volunteer implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		backButton.setBounds(0, height - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		backButton.setBounds(0, height - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 	}
 
 	@Override
 	public void show() {
+		//Disable Ads
+		game.showAds(true);
+
 		InputMultiplexer im = new InputMultiplexer(stage, stageui, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);	
@@ -129,7 +151,7 @@ public class Volunteer implements Screen{
 		cam.setToOrtho(false, game.getWidth(), game.getHeight());
 		cam.update();   
 		stage.setCamera(cam);
-		cam.zoom = 0.4f;
+		cam.zoom = 1f;
 		stage.addActor(jeremy);
 
 		/*
@@ -137,7 +159,7 @@ public class Volunteer implements Screen{
 		 */
 
 		backButton = new TextButton("Back", Assets.skin);
-		backButton.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		backButton.setBounds(0, game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -152,7 +174,7 @@ public class Volunteer implements Screen{
 		 */
 
 		final TextButton weaponButton = new TextButton(weaponNames[weaponIndex], Assets.skin);
-		weaponButton.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		weaponButton.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		weaponButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -160,14 +182,33 @@ public class Volunteer implements Screen{
 				if (weaponIndex >= weaponNames.length)
 					weaponIndex = 0;
 				weaponButton.setText(weaponNames[weaponIndex]);
-				
+
 				addTesterSpeech();
-				
+
 			}
 		});	
 
-		stageui.addActor(weaponButton);	
-		
+		stageui.addActor(weaponButton);
+
+		final TextButton zoomButton = new TextButton("Zoom: "+ cam.zoom, Assets.skin);
+		zoomButton.setBounds(game.getWidth() - game.getButtonWidth(), game.getHeight() - game.getButtonHeight()*3, game.getButtonWidth(), game.getButtonHeight());
+		zoomButton.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				if (cam.zoom == 0.4f)
+					cam.zoom = 1f;
+
+				else if (cam.zoom == 1f)
+					cam.zoom = 0.4f;
+
+				zoomButton.setText("Zoom: "+ cam.zoom);			
+
+			}
+		});	
+
+		stageui.addActor(zoomButton);	
+
 		addTesterSpeech();
 	}
 
@@ -175,7 +216,7 @@ public class Volunteer implements Screen{
 		SpeechBubble sb = speechBubblePool.obtain();
 		sb.setColor(new Color(0.5f, 0.5f, 0.5f,  1f));
 		switch (weaponIndex){
-		
+
 		case 0:{
 			sb.init("This might hurt a bit mate.", game.getWidth(), 0);
 			break;
@@ -184,11 +225,11 @@ public class Volunteer implements Screen{
 			sb.init("Hang in there Jeremy!", game.getWidth(), 0);
 			break;
 		}
-		
+
 		}	
-		
+
 		stageui.addActor(sb);
-		
+
 	}
 
 	private void checkDamageImages(){
@@ -220,65 +261,6 @@ public class Volunteer implements Screen{
 		batch.dispose();		
 	}
 
-	private class MyInputProcessor implements InputProcessor{
-
-		@Override
-		public boolean keyDown(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-
-			if(keycode == Keys.BACK || 
-					keycode == Keys.BACKSPACE ||
-					keycode == Keys.ESCAPE){
-
-				game.setScreen(new Examples(game));
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			return false;
-		}
-		@Override
-		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			//			damage = MathUtils.random(-5, 5);
-			//			DamageImage di = EffectsCache.getDamageEffect();
-			//
-			//			di.init(damage, jeremy.getX(), jeremy.getY());
-			//			stage.addActor(di);
-			
-			attackWithWeapon();
-			
-
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(int amount) {
-			return false;
-		}
-	}
-
 	class Jeremy extends Actor{		
 
 		private Animation animation;
@@ -288,7 +270,7 @@ public class Volunteer implements Screen{
 		public Jeremy(){	
 			animation = new Animation(1f, Assets.spriteSheet.createSprites("man_die"));		
 			currentFrame = animation.getKeyFrame(0f);
-			
+
 			setBounds(0, 0, currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
 		}
 
@@ -298,12 +280,7 @@ public class Volunteer implements Screen{
 
 			Assets.font24.drawMultiLine(batch, hp_current + "/" + hp_max, getX(), getY(), getWidth(), HAlignment.CENTER);
 		}
-		
-		@Override
-		public float getX() {
-			// TODO Auto-generated method stub
-			return super.getX();
-		}
+
 
 		@Override
 		public void setPosition(float x, float y) {			
@@ -320,11 +297,11 @@ public class Volunteer implements Screen{
 			if (hp_current < 0)
 				hp_current = 0;
 		}
-		
+
 		@Override
 		public void act(float delta) {			
 			super.act(delta);
-			
+
 			if (hp_current <= 3)
 				currentFrame = animation.getKeyFrame(5f);
 			else if (hp_current <= 8)
@@ -337,11 +314,11 @@ public class Volunteer implements Screen{
 				currentFrame = animation.getKeyFrame(1f);
 			else
 				currentFrame = animation.getKeyFrame(0f);
-			
+
 		}
 	}
 
-	abstract class WeaponEffect extends Actor{
+	abstract class WeaponEffect extends Actor{ //TODO poolable?
 
 		protected Animation animation;
 		private TextureRegion currentFrame;
@@ -364,7 +341,7 @@ public class Volunteer implements Screen{
 		public void act (float delta) {
 			super.act(delta);				
 			time += delta;		
-			
+
 			currentFrame = animation.getKeyFrame(time);	
 
 			if (alive && animation.isAnimationFinished(time)){
@@ -388,7 +365,7 @@ public class Volunteer implements Screen{
 
 		protected abstract void perform();
 	}
-	
+
 	class Heal extends WeaponEffect{
 
 		Heal(Jeremy actor, int damage){
@@ -397,7 +374,7 @@ public class Volunteer implements Screen{
 			this.damage = damage;			
 			this.actor = actor;
 			animation = new Animation(0.1f, Assets.spriteSheet.createSprites("fx_sparkle"), Animation.NORMAL);
-			
+
 		}
 
 		@Override
@@ -406,13 +383,14 @@ public class Volunteer implements Screen{
 			di.init(this.damage, actor.getX() + actor.getWidth()/2, actor.getY() + actor.getHeight()/3);
 			stage.addActor(di);
 			actor.addHP(this.damage);
+			Sounds.PlaySound(Sounds.SoundPointer.HEAL_01);
 		}
 	}
 
 	class Sword extends WeaponEffect{
 
 		Sword(Jeremy actor, int damage){
-			
+
 			alive = true;
 			this.damage = damage;			
 			this.actor = actor;
@@ -427,6 +405,7 @@ public class Volunteer implements Screen{
 			stage.addActor(di);
 			actor.addHP(this.damage);
 			Sounds.PlaySound(Sounds.SoundPointer.HIT_01);
+			game.CameraShaker.Shake(cam, 0.1f, 0.3f);
 		}
 	}
 
@@ -435,14 +414,14 @@ public class Volunteer implements Screen{
 		case 0:{
 			stage.addActor(new Sword(jeremy, MathUtils.random(-2, -1)));			
 			break;
-			
+
 		}		
 		case 1:{
-			
+
 			stage.addActor(new Heal(jeremy, MathUtils.random(1, 2)));			
 			break;
 		}		
-		
+
 		}		
 	}
 }

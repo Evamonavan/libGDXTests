@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Camera2D extends BlankTestScreen{	
@@ -23,6 +24,19 @@ public class Camera2D extends BlankTestScreen{
 	protected float camY;
 	protected float camZ;
 	protected float camZoom;
+	
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+	};
 
 	public Camera2D(MyGame game) {
 		super(game);
@@ -78,10 +92,11 @@ public class Camera2D extends BlankTestScreen{
 	@Override
 	protected void renderText(){
 
+
 		batchui.begin();
 		Assets.font24.setColor(1, 1, 1, 0.8f);
 		for (int i = 0; i < Text.size; i++){			
-			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT - 24 - i*24, width, HAlignment.RIGHT);
+			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT*2 - 24 - i*24, width, HAlignment.RIGHT);
 		}
 		renderTestName(batchui);
 		batchui.end();
@@ -89,16 +104,19 @@ public class Camera2D extends BlankTestScreen{
 
 	@Override
 	public void show() {
+		//Disable Ads for tests
+		game.showAds(true);
+
 		testName = "Camera 2D Test |";
 		addCameraControl(width, 0, height, 0);
 		addBackButton();
 		controller = new CameraController();
 		controller.setBounds(width, 0, height, 0);
 		gestureDetector = new GestureDetector(20, 0.5f, 2, 0.15f, controller);
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, gestureDetector, this);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, gestureDetector, this, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
-		
+
 		cam.zoom = 1.4f;
 		camX = cam.position.x;
 		camY = cam.position.y;

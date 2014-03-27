@@ -5,6 +5,8 @@ import com.badlogic.gdx.Preferences;
 
 public class AppData {
 
+	public static boolean DISABLE_ADS = false;
+	
 	public static class Prefs{
 		private static Preferences prefs;
 
@@ -17,26 +19,30 @@ public class AppData {
 		public static boolean isLimitParticles(){
 			return prefs.getBoolean(limitParticles, true);			
 		}
+		
 		public static boolean isEnableSound(){
 			return prefs.getBoolean(enableSound, true);			
 		}
+		
 		public static float getBackgroundR() {
 
 			return prefs.getFloat(backgroundR, 0.0f);	
 		}
+		
 		public static float getBackgroundG() {
 
 			return prefs.getFloat(backgroundG, 0.0f);	
 		}
+		
 		public static float getBackgroundB() {
 
 			return prefs.getFloat(backgroundB, 0.0f);	
 		}
 
-
 		public static void setLimitParticles(boolean limit){
 			prefs.putBoolean(limitParticles, limit);
 		}	
+		
 		public static void setEnableSound(boolean limit){
 			prefs.putBoolean(enableSound, limit);
 		}	
@@ -57,7 +63,8 @@ public class AppData {
 		public static void Save(){
 			prefs.flush();
 
-		}		
+		}	
+		
 		public static void Load(){			
 			prefs = Gdx.app.getPreferences("AppPreferences");
 

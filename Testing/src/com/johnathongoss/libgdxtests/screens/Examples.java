@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.examples.FishTank;
 import com.johnathongoss.libgdxtests.examples.PopCorns;
 import com.johnathongoss.libgdxtests.examples.Talking;
@@ -21,6 +22,20 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 
 	TextButton exampleButton;
 	private Array<TextButton> buttons;
+	
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+	};
+	
 	public Examples(MyGame game) {
 		super(game);				
 		Text.add("Examples |");
@@ -42,14 +57,17 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 
 	@Override
 	public void show(){
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		//Enable Ads
+		game.showAds(true);
+		
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
 
-		backButton = new TextButton("Back", skin);
+		backButton = new TextButton("Main Menu", skin);
 		backButton.setHeight(BUTTON_HEIGHT);
 		backButton.setWidth(BUTTON_WIDTH);
-		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		backButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -112,22 +130,22 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 		});		
 
 		buttons.add(debugButton);
-		
+
 		/*
 		 * Volunteer
 		 */
-		
+
 		debugButton = new TextButton("Volunteer", skin);
 		debugButton.setHeight(BUTTON_HEIGHT);
 		debugButton.setWidth(BUTTON_WIDTH);
-		
+
 		debugButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				game.setScreen(new Volunteer(game));
 			}
 		});		
-		
+
 		buttons.add(debugButton);
 
 		for (TextButton button : buttons){			
@@ -143,7 +161,7 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 
 		for (int i = 0; i < buttons.size; i++){
 
-			buttons.get(i).setPosition(buttons.get(i).getWidth()*row, height - (i + 1)*buttons.get(i).getHeight());
+			buttons.get(i).setPosition(buttons.get(i).getWidth()*row, height - (i + 2)*buttons.get(i).getHeight());
 
 			if (i == 8)
 				row++;			
@@ -167,7 +185,7 @@ public class Examples extends BlankTestScreen implements InputProcessor{
 
 	@Override
 	public boolean keyDown(int keycode) {
-		
+
 		return false;
 	}
 

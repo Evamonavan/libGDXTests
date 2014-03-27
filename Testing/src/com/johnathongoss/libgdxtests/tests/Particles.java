@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.AppData;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.ParticleCache;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
@@ -25,6 +26,19 @@ public class Particles extends BlankTestScreen {
 	private boolean continuous = false;
 	private TextButton limitButton;
 	private boolean limitReached = false;
+	
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+	};
 
 	public Particles(MyGame game) {
 		super(game);	
@@ -37,7 +51,7 @@ public class Particles extends BlankTestScreen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		if (Effects.size < 5)
 			limitReached = false;
-		
+
 		stage.act();
 		stage.draw();
 		batch.setProjectionMatrix(cam.combined);		
@@ -65,11 +79,14 @@ public class Particles extends BlankTestScreen {
 
 	@Override
 	public void show() {
+		//Disable Ads for tests
+		game.showAds(true);
+
 		addBackButton();			
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
-		
+
 		switchButton = new TextButton(Names[index], skin);
 		switchButton.setHeight(BUTTON_HEIGHT);
 		switchButton.setWidth(BUTTON_WIDTH);		
@@ -84,7 +101,7 @@ public class Particles extends BlankTestScreen {
 				switchButton.setText(Names[index]);
 			}
 		});	
-		switchButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT);
+		switchButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
 		stageui.addActor(switchButton);
 
 		limitButton = new TextButton("Cont.: " + continuous, skin);
@@ -100,7 +117,7 @@ public class Particles extends BlankTestScreen {
 				limitButton.setText("Cont.: " + continuous + "");
 			}
 		});	
-		limitButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2);
+		limitButton.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*3);
 		stageui.addActor(limitButton);
 
 		TextButton button = new TextButton("Clear", skin);
@@ -112,7 +129,7 @@ public class Particles extends BlankTestScreen {
 				clearParticles();
 			}
 		});	
-		button.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*3);
+		button.setPosition(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*4);
 		stageui.addActor(button);
 
 		Effects = new Array<PooledEffect>();
@@ -139,7 +156,7 @@ public class Particles extends BlankTestScreen {
 	protected void renderText() {
 
 		for (int i = 0; i < Text.size; i++){
-			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT*3 - i*24, width, HAlignment.RIGHT);
+			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT*3 - i*24 - BUTTON_HEIGHT, width, HAlignment.RIGHT);
 
 		}
 	}

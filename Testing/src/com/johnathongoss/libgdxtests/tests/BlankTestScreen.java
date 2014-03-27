@@ -52,7 +52,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 			backButton = new TextButton("Back", skin);
 			backButton.setHeight(BUTTON_HEIGHT);
 			backButton.setWidth(BUTTON_WIDTH);
-			backButton.setPosition(0, height - BUTTON_HEIGHT);
+			backButton.setPosition(0, height - BUTTON_HEIGHT*2);
 			backButton.addListener(new ClickListener() {
 				@Override
 				public void clicked(InputEvent event, float x, float y) {
@@ -75,7 +75,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 		BUTTON_WIDTH = Gdx.app.getGraphics().getWidth()/7;
 		BUTTON_HEIGHT = Gdx.app.getGraphics().getHeight()/8;
 		int row = 0, column = 0;
-		float tempX = width - BUTTON_WIDTH, tempY = height - BUTTON_HEIGHT;
+		float tempX = width - BUTTON_WIDTH, tempY = height - BUTTON_HEIGHT*2;
 		for (int i = 0; i < buttons.size; i++){
 
 			buttons.get(i).setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -96,7 +96,7 @@ public abstract class BlankTestScreen extends BlankScreen {
 		}
 
 		if (showBackButton)
-			backButton.setPosition(0, height - backButton.getHeight());
+			backButton.setPosition(0, height - backButton.getHeight()*2);
 
 	}
 

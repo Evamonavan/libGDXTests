@@ -3,7 +3,6 @@ package com.johnathongoss.libgdxtests.examples;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
@@ -26,13 +25,29 @@ import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.ParticleCache;
 import com.johnathongoss.libgdxtests.entities.MyTimer;
 import com.johnathongoss.libgdxtests.screens.Examples;
 
 public class FishTank implements Screen {
 
-	MyInputProcessor input = new MyInputProcessor();
+	MyInputProcessor input = new MyInputProcessor(){	
+
+		@Override
+		public boolean keyUp(int keycode) {
+
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+
+				game.setScreen(new Examples(game));
+			}
+
+			return false;
+		}		
+
+	};
 
 	/*
 	 * Essentials
@@ -68,7 +83,7 @@ public class FishTank implements Screen {
 		/*
 		 * Initiate Variables
 		 */
-		
+
 		testName = "Fish Tank Example |";
 
 		batch = new SpriteBatch();
@@ -127,6 +142,9 @@ public class FishTank implements Screen {
 
 	@Override
 	public void show() {	
+		//Disable Ads
+		game.showAds(true);
+		
 		InputMultiplexer im = new InputMultiplexer(stageui, stage, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);		
@@ -163,7 +181,7 @@ public class FishTank implements Screen {
 		viscosity = 0.99f;
 
 		backButton = new TextButton("Back", Assets.skin);
-		backButton.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getWidth(), game.getButtonHeight());
+		backButton.setBounds(0, game.getHeight() - game.getButtonHeight()*2, game.getWidth(), game.getButtonHeight());
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -179,10 +197,10 @@ public class FishTank implements Screen {
 			fishes.get(i).changeColor();
 			stage.addActor(fishes.get(i));
 		}
-		
+
 		//TODO check fish positions and prevent overlap bug
 	}
-	
+
 	private void followFish() {
 		cam.zoom = 0.5f;
 		cam.position.x = followedFish.getX();
@@ -265,7 +283,7 @@ public class FishTank implements Screen {
 				}
 			});
 
-			setTouchable(Touchable.enabled);
+			//setTouchable(Touchable.disabled);
 		} 
 		private void changeDirection(float power) {
 			animate();
@@ -418,7 +436,7 @@ public class FishTank implements Screen {
 		stage.setViewport(width, height, true);
 		stageui.setViewport(width, height, true);
 
-		backButton.setBounds(0, height - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+		backButton.setBounds(0, height - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 
 		tank.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
 		tank_shine.setScale((float)Gdx.app.getGraphics().getWidth() / (float)tank.getRegionWidth(), (float)Gdx.app.getGraphics().getHeight() / (float)tank.getRegionHeight());
@@ -441,56 +459,5 @@ public class FishTank implements Screen {
 		batchui.dispose();
 		stage.dispose();
 		stageui.dispose();
-	}
-	
-	private class MyInputProcessor implements InputProcessor{
-
-		@Override
-		public boolean keyDown(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-
-			if(keycode == Keys.BACK || 
-					keycode == Keys.BACKSPACE ||
-					keycode == Keys.ESCAPE){
-				
-				game.setScreen(new Examples(game));
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(int amount) {
-			return false;
-		}
-	}
+	}	
 }

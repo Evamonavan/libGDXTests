@@ -3,7 +3,6 @@ package com.johnathongoss.libgdxtests.tests;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -22,9 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
-public class AnimationTest implements Screen, InputProcessor{
+public class AnimationTest implements Screen{
 
 	MyGame game;
 	private String testName = "Animation Test |";
@@ -32,7 +32,36 @@ public class AnimationTest implements Screen, InputProcessor{
 	SpriteBatch batch;
 	Stage stage, stageui;
 	OrthographicCamera cam;
+	
 	Walker man;
+
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+
+		@Override
+		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+			man.setTarget(new Vector2(screenX, Gdx.app.getGraphics().getHeight() - screenY));
+
+			return false;
+		}
+
+		@Override
+		public boolean touchDragged(int screenX, int screenY, int pointer) {
+			man.setTarget(new Vector2(screenX, Gdx.app.getGraphics().getHeight() - screenY));
+
+			return false;
+		}
+	};
 
 	public AnimationTest(MyGame game) {
 		this.game = game;
@@ -66,7 +95,10 @@ public class AnimationTest implements Screen, InputProcessor{
 	}
 
 	@Override
-	public void show() {		
+	public void show() {	
+		//Disable Ads for tests
+		game.showAds(true);
+
 		batch = new SpriteBatch();
 		stage = new Stage();
 		stageui = new Stage();
@@ -78,8 +110,8 @@ public class AnimationTest implements Screen, InputProcessor{
 
 		man = new Walker("man");
 		man.setPosition(new Vector2(Gdx.app.getGraphics().getWidth()/2, Gdx.app.getGraphics().getHeight()/2));
-		
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
 
@@ -93,7 +125,7 @@ public class AnimationTest implements Screen, InputProcessor{
 				game.setScreen(new MainMenu(game));
 			}
 		});	
-		button.setPosition(0, Gdx.app.getGraphics().getHeight() - button.getHeight());
+		button.setPosition(0, Gdx.app.getGraphics().getHeight() - button.getHeight()*2);
 		stageui.addActor(button);
 	}
 
@@ -118,69 +150,14 @@ public class AnimationTest implements Screen, InputProcessor{
 		batch.dispose();
 		stage.dispose();
 		stageui.dispose();
-	}
-
-	@Override
-	public boolean keyDown(int keycode) {
-
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		if(keycode == Keys.BACK || 
-				keycode == Keys.BACKSPACE ||
-				keycode == Keys.ESCAPE){
-			game.setScreen(new MainMenu(game));
-		}
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-		man.setTarget(new Vector2(screenX, Gdx.app.getGraphics().getHeight() - screenY));
-
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		man.setTarget(new Vector2(screenX, Gdx.app.getGraphics().getHeight() - screenY));
-
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-
-		return false;
-	}
+	}	
 
 	class Walker extends Actor{
 
 		Vector2 position;
 		Vector2 target;
 		Vector2 velocity;		
-		
+
 		Animation aWalk_d, aWalk_u, aWalk_l, aWalk_r;
 		private Array<Sprite> sprites;
 		private boolean moving = false;
@@ -223,9 +200,9 @@ public class AnimationTest implements Screen, InputProcessor{
 		@Override
 		public void act (float delta) {
 			super.act(delta);	
-			
+
 			time += delta;
-			
+
 			/** Which animation logic. */
 			if (velocity.y > 0 && Math.abs(velocity.y) >= Math.abs(velocity.x))
 				currentFrame = aWalk_u.getKeyFrame(time);	
@@ -266,13 +243,13 @@ public class AnimationTest implements Screen, InputProcessor{
 			if (moving)
 				position.add(velocity);
 		}
-		
+
 		public Vector2 getPosition() {
 			return position;
 		}
 		public void setPosition(Vector2 position){			
 			this.position = position;
-						
+
 		}
 
 		public void setTarget(Vector2 target){

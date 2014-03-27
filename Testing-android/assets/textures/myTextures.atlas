@@ -38,44 +38,58 @@ circle
   orig: 100, 100
   offset: 0, 0
   index: -1
+hex
+  rotate: false
+  xy: 1325, 722
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+hex_selected
+  rotate: false
+  xy: 1527, 924
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
 brian
   rotate: false
-  xy: 1325, 738
+  xy: 103, 96
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 brick
   rotate: false
-  xy: 1325, 738
+  xy: 103, 96
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 ron
   rotate: false
-  xy: 1325, 738
+  xy: 103, 96
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 veronica
   rotate: false
-  xy: 1325, 738
+  xy: 103, 96
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 worker
   rotate: false
-  xy: 1325, 738
+  xy: 103, 96
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 bubble
   rotate: false
-  xy: 1527, 947
+  xy: 1, 1
   size: 74, 73
   split: 24, 24, 24, 24
   orig: 74, 73
@@ -83,7 +97,7 @@ bubble
   index: -1
 tooltip
   rotate: false
-  xy: 1, 1
+  xy: 1325, 647
   size: 74, 73
   split: 20, 21, 12, 14
   orig: 74, 73
@@ -91,14 +105,14 @@ tooltip
   index: -1
 damage_icon
   rotate: false
-  xy: 103, 112
+  xy: 1423, 754
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 heal_icon
   rotate: false
-  xy: 1325, 672
+  xy: 1527, 858
   size: 64, 64
   orig: 64, 64
   offset: 0, 0

@@ -27,13 +27,13 @@ public class TooltipTest extends BlankScreen implements InputProcessor{
 	private float width, height, BUTTON_WIDTH, BUTTON_HEIGHT;
 	private String testName = "Tooltip Test |";
 	private boolean usePics = false;
-	
-    private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
-        @Override
-        protected SpeechBubble newObject() {
-                return new SpeechBubble();
-        }
-    };
+
+	private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
+		@Override
+		protected SpeechBubble newObject() {
+			return new SpeechBubble();
+		}
+	};
 
 	private String texts[] = {"Did you see that ludicrous display last night?", "What did the apple say to the tree?",
 			"Don't do that!", "Watch it!", "Take your time then.",
@@ -77,13 +77,16 @@ public class TooltipTest extends BlankScreen implements InputProcessor{
 
 			if (sb instanceof SpeechBubble && !((SpeechBubble) sb).isAlive()){
 				stage.getActors().removeValue(sb, true);
-                speechBubblePool.free((SpeechBubble) sb);	
+				speechBubblePool.free((SpeechBubble) sb);	
 			}
 		}
 	}
 
 	@Override
 	public void show() {
+		//Disable Ads for tests
+		game.showAds(false);
+
 		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);	
@@ -109,7 +112,7 @@ public class TooltipTest extends BlankScreen implements InputProcessor{
 		});		
 		stageui.addActor(picbutton);
 	}	
-	
+
 	@Override
 	public void dispose(){
 		super.dispose();
@@ -120,12 +123,12 @@ public class TooltipTest extends BlankScreen implements InputProcessor{
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
 		SpeechBubble sb = speechBubblePool.obtain();
-		
+
 		if (usePics)
 			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY, ImageCache.getTexture("background"));
 		else
 			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY);
-		
+
 		sb.setColor(new Color(MathUtils.random(0, 1f), MathUtils.random(0, 1f), MathUtils.random(0, 1f),  MathUtils.random(1f, 1f)));
 		stage.addActor(sb);
 

@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.ImageCache;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.entities.SpeechBubble;
 import com.johnathongoss.libgdxtests.screens.BlankScreen;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
@@ -28,12 +29,25 @@ public class SpeechTest extends BlankScreen implements InputProcessor{
 	private String testName = "Text Test |";
 	private boolean usePics = false;
 	
-    private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
-        @Override
-        protected SpeechBubble newObject() {
-                return new SpeechBubble();
-        }
-    };
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+	};
+
+	private final Pool<SpeechBubble> speechBubblePool = new Pool<SpeechBubble>() {
+		@Override
+		protected SpeechBubble newObject() {
+			return new SpeechBubble();
+		}
+	};
 
 	private String texts[] = {"Did you see that ludicrous display last night?", "What did the apple say to the tree?",
 			"Don't do that!", "Watch it!", "Take your time then.",
@@ -77,19 +91,22 @@ public class SpeechTest extends BlankScreen implements InputProcessor{
 
 			if (sb instanceof SpeechBubble && !((SpeechBubble) sb).isAlive()){
 				stage.getActors().removeValue(sb, true);
-                speechBubblePool.free((SpeechBubble) sb);	
+				speechBubblePool.free((SpeechBubble) sb);	
 			}
 		}
 	}
 
 	@Override
 	public void show() {
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		//Disable Ads for tests
+		game.showAds(true);
+
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);	
 
 		TextButton backbutton = new TextButton("Back", skin);
-		backbutton.setBounds(0, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		backbutton.setBounds(0, height - BUTTON_HEIGHT*2, BUTTON_WIDTH, BUTTON_HEIGHT);
 		backbutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -99,7 +116,7 @@ public class SpeechTest extends BlankScreen implements InputProcessor{
 		stageui.addActor(backbutton);	
 
 		final TextButton picbutton = new TextButton("Pics: " + usePics, skin);
-		picbutton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+		picbutton.setBounds(width - BUTTON_WIDTH, height - BUTTON_HEIGHT*2, BUTTON_WIDTH, BUTTON_HEIGHT);
 		picbutton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -109,7 +126,7 @@ public class SpeechTest extends BlankScreen implements InputProcessor{
 		});		
 		stageui.addActor(picbutton);
 	}	
-	
+
 	@Override
 	public void dispose(){
 		super.dispose();
@@ -120,12 +137,12 @@ public class SpeechTest extends BlankScreen implements InputProcessor{
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
 		SpeechBubble sb = speechBubblePool.obtain();
-		
+
 		if (usePics)
 			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY, ImageCache.getTexture("background"));
 		else
 			sb.init(texts[MathUtils.random(0, texts.length - 1)], screenX, height + -screenY);
-		
+
 		sb.setColor(new Color(MathUtils.random(0, 1f), MathUtils.random(0, 1f), MathUtils.random(0, 1f),  MathUtils.random(1f, 1f)));
 		stage.addActor(sb);
 

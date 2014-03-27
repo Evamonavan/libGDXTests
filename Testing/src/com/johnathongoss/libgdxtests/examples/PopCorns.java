@@ -2,7 +2,6 @@ package com.johnathongoss.libgdxtests.examples;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -24,39 +23,56 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
+import com.johnathongoss.libgdxtests.Sounds;
 import com.johnathongoss.libgdxtests.entities.MyTimer;
 import com.johnathongoss.libgdxtests.screens.Examples;
 
 public class PopCorns implements Screen{		
 
-	MyInputProcessor input = new MyInputProcessor();	
-	
+	MyInputProcessor input = new MyInputProcessor(){	
+
+		@Override
+		public boolean keyUp(int keycode) {
+
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+
+				game.setScreen(new Examples(game));
+			}
+
+			return false;
+		}		
+
+	};
+
 	MyGame game;
 	private Stage stage, stageui;
 	private SpriteBatch batchui;
 	String testName;
-	
+
 	MyTimer timer;
 	private int numBalls;
 	private float gravity;
 	private float hardness;
 	private float conservedEnergy;
 	private Array<Corn> corns;
-	
+
 	public float friction;
 	public ShapeRenderer shapeRenderer;
-	
+
 	TextButton backButton;
-	
+
 	public PopCorns(MyGame game) {
 		this.game = game;
-		
+
 		testName = "Pop Corn Example |";
-		
+
 		stage = new Stage();
 		stageui = new Stage();
 		batchui= new SpriteBatch();		
-		
+
 		shapeRenderer = new ShapeRenderer();
 		timer = new MyTimer(MathUtils.random(2f, 6f)) {
 
@@ -68,21 +84,24 @@ public class PopCorns implements Screen{
 
 			}
 		};
-		
+
 		backButton = new TextButton("Back", Assets.skin);
 		corns = new Array<Corn>();
 	}
 
 	@Override
 	public void show(){
+		//Disable Ads
+		game.showAds(true);
+
 		InputMultiplexer im = new InputMultiplexer(stageui, stage, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);		
 
 		timer.start();
 		timer.setRepeating(true);					
-		
-		backButton.setBounds(0, game.getHeight() - game.getButtonHeight(), game.getButtonWidth(), game.getButtonHeight());
+
+		backButton.setBounds(0, game.getHeight() - game.getButtonHeight()*2, game.getButtonWidth(), game.getButtonHeight());
 		backButton.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -96,7 +115,7 @@ public class PopCorns implements Screen{
 		hardness = 0.6f;
 		conservedEnergy = 0.85f;
 		friction = -0.75f;		
-		
+
 		numBalls = 50;
 		for (int i = 0; i < numBalls ; i++) {
 			corns.add(new Corn(MathUtils.random(game.getWidth()), MathUtils.random(0, game.getHeight()/2), game.getWidth()/30 , i, corns));
@@ -117,12 +136,12 @@ public class PopCorns implements Screen{
 			gravity -= delta;
 
 		timer.update(delta);
-		
+
 		batchui.begin();
 		Assets.font24.drawMultiLine(batchui, testName, 0, 24, game.getWidth(), HAlignment.RIGHT);
 		batchui.end();
 	}	
-	
+
 	private void popTheCorn() {
 
 		int tempInt = MathUtils.random(0, corns.size - 1);
@@ -150,12 +169,14 @@ public class PopCorns implements Screen{
 		stage.dispose();
 		stageui.dispose();
 		batchui.dispose();
+		Sounds.ClearSounds();
 	}
 
 	private class Corn extends Actor {
 		public boolean popped;
 
 		public void pop(){
+			Sounds.PlaySound(Sounds.SoundPointer.POPCORN_POP);
 			popped = true;
 
 			setDiameter(MathUtils.random(game.getWidth()/18, game.getWidth()/12));
@@ -183,7 +204,7 @@ public class PopCorns implements Screen{
 
 			addListener(new ActorGestureListener(){
 				public void fling(InputEvent event, float velocityX, float velocityY, int button){
-					
+
 				}
 
 				public void tap(InputEvent event, float x, float y, int count, int button){
@@ -197,11 +218,11 @@ public class PopCorns implements Screen{
 
 
 		} 
-		
+
 		public float getXOffset(){
 			return getX() + diameter/2;			
 		}
-		
+
 		public float getYOffset(){
 			return getY() + diameter/2;			
 		}
@@ -268,7 +289,7 @@ public class PopCorns implements Screen{
 			shapeRenderer.setColor(getColor());
 			shapeRenderer.circle(getXOffset(), getYOffset(), diameter/2);
 			shapeRenderer.end();
-			
+
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 			shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
@@ -304,56 +325,5 @@ public class PopCorns implements Screen{
 			setOrigin(diameter/2, diameter/2);
 			setScale(1f);
 		}
-	}
-	
-	private class MyInputProcessor implements InputProcessor{
-
-		@Override
-		public boolean keyDown(int keycode) {
-			return false;
-		}
-
-		@Override
-		public boolean keyUp(int keycode) {
-
-			if(keycode == Keys.BACK || 
-					keycode == Keys.BACKSPACE ||
-					keycode == Keys.ESCAPE){
-				
-				game.setScreen(new Examples(game));
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean keyTyped(char character) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-			return false;
-		}
-
-		@Override
-		public boolean touchDragged(int screenX, int screenY, int pointer) {
-			return false;
-		}
-
-		@Override
-		public boolean mouseMoved(int screenX, int screenY) {
-			return false;
-		}
-
-		@Override
-		public boolean scrolled(int amount) {
-			return false;
-		}
-	}
+	}	
 }

@@ -1,6 +1,7 @@
 package com.johnathongoss.libgdxtests;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -11,6 +12,9 @@ public class Assets {
 	public static Skin skin;
 	public static TextureAtlas spriteSheet;
 	public static void Load(){			
+		
+		// To avoid textures that aren't powers of two to be loaded. Safety precaution.
+		Texture.setEnforcePotImages(false);
 		
 		font32 = new BitmapFont(Gdx.files.internal("data/font_32.fnt"),
 				Gdx.files.internal("data/font_32.png"), false);

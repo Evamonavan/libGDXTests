@@ -33,15 +33,15 @@ public class EffectsCache {
 		
 	}	
 	
-	class Slash extends Effect{
-		
-		Animation animation;		
-		
-		public void Perform(Actor actor, int damage){
-			
-			animation = new Animation(0.1f, Assets.spriteSheet.createSprites("fx_slash"), Animation.NORMAL);
-			
-		}
-		
-	}
+//	class Slash extends Effect{
+//		
+//		Animation animation;		
+//		
+//		public void Perform(Actor actor, int damage){
+//			
+//			animation = new Animation(0.1f, Assets.spriteSheet.createSprites("fx_slash"), Animation.NORMAL);
+//			
+//		}
+//		
+//	}
 }

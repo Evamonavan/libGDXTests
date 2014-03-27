@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.johnathongoss.libgdxtests.Assets;
 import com.johnathongoss.libgdxtests.MyGame;
+import com.johnathongoss.libgdxtests.MyInputProcessor;
 import com.johnathongoss.libgdxtests.screens.MainMenu;
 
 public class Collision extends BlankTestScreen {
@@ -42,6 +43,19 @@ public class Collision extends BlankTestScreen {
 	protected float CEnergyLevel[] = {0.25f, 0.50f, 0.75f, 0.85f, 0.95f, 1, 1.01f, 1.02f, 1.04f, 1.06f, 1.08f, 1.1f}; 
 	protected int cEnergyPointer = 0;
 	protected int numBalls = 16;
+	
+	MyInputProcessor input = new MyInputProcessor(){
+
+		@Override
+		public boolean keyUp(int keycode) {
+			if(keycode == Keys.BACK || 
+					keycode == Keys.BACKSPACE ||
+					keycode == Keys.ESCAPE){
+				game.setScreen(new MainMenu(game));
+			}
+			return false;
+		}
+	};
 
 	public Collision(MyGame game) {
 		super(game);
@@ -79,7 +93,7 @@ public class Collision extends BlankTestScreen {
 		batchui.begin();
 		Assets.font24.setColor(1, 1, 1, 0.8f);
 		for (int i = 0; i < Text.size; i++){			
-			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT/3 - i*BUTTON_HEIGHT, width - BUTTON_WIDTH*2, HAlignment.RIGHT);
+			Assets.font24.drawMultiLine(batchui, Text.get(i), 0, height - BUTTON_HEIGHT/3 - i*BUTTON_HEIGHT - BUTTON_HEIGHT, width - BUTTON_WIDTH*2, HAlignment.RIGHT);
 		}
 		renderTestName(batchui);
 		batchui.end();
@@ -87,11 +101,15 @@ public class Collision extends BlankTestScreen {
 
 	@Override
 	public void show() {
+		//Disable Ads for tests
+		game.showAds(true);
+
 		testName = "Collision Test |";	
 		addBackButton();
-		InputMultiplexer im = new InputMultiplexer(stageui, stage, this);
+		InputMultiplexer im = new InputMultiplexer(stageui, stage, this, input);
 		Gdx.input.setInputProcessor(im);		
 		Gdx.input.setCatchBackKey(true);
+		
 		/*
 		 * Randomise setup
 		 */
@@ -299,7 +317,7 @@ public class Collision extends BlankTestScreen {
 
 			setTouchable(Touchable.enabled);
 
-			
+
 		} 
 
 		Color tempColor;
@@ -394,7 +412,7 @@ public class Collision extends BlankTestScreen {
 			shapeRenderer.setColor(getColor());
 			shapeRenderer.circle(getXOffset(), getYOffset(), diameter/2);
 			shapeRenderer.end();
-			
+
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
 			shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
@@ -432,7 +450,7 @@ public class Collision extends BlankTestScreen {
 
 		public void setDiameter(float diameter) {
 			this.diameter = diameter;
-			
+
 		}
 	}
 	@Override
